@@ -22,9 +22,14 @@ Ball.prototype.bounce = function () {
   }
 };
 
-// Ball.prototype.barBouce = function (bar) {
-//   var barTop =
-//   if (this.y + this.vy > this.canvasHeight - this.radius || this.y + this.vy < this.radius) {
-//     this.vy = -this.vy;
-//   }
-//};
+Ball.prototype.barBounce = function (bar) {
+  var barTop = this.canvasHeight - bar.height;
+  var barLeftMargin = bar.x;
+  var barRightMargin = bar.x + bar.width;
+  var ballBottom = this.y + this.radius;
+  var ballX = this.x;
+  if (ballBottom > barTop && ballX >= barLeftMargin && ballX <= barRightMargin) {
+    this.vy = - this.vy;
+  }
+
+};

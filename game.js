@@ -55,8 +55,6 @@ Game.prototype._update = function () {
   this._drawBar();
   this.ball.bounce();
   //bounce with Bar
-  // if (this.ball.barBounce(this.bar)){
-  //
-  // }
+  this.ball.barBounce(this.bar);
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
