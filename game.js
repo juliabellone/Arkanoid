@@ -28,16 +28,24 @@ Game.prototype._drawBar = function () {
   this.ctx.fillStyle = this.bar.color;
   this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
 };
-
+var keys = [];
 Game.prototype._assignControlKeys = function () {
-    document.onkeydown = function (e) {
-      switch (e.keyCode) {
-        case 37: this.bar.goLeft();
-        break;
-        case 39: this.bar.goRight();
-        break;
-      }
-    }.bind(this);
+
+  window.addEventListener("keydown", function (e) {
+    keys[e.keyCode] = true;
+  });
+  window.addEventListener("keyup", function (e) {
+    keys[e.keyCode] = false;
+  });
+
+  if (keys[37]) {
+    this.bar.goLeft();
+  }
+
+  if (keys[39]) {
+    this.bar.goRight();
+  }
+  //console.log(keys);
 };
 
 Game.prototype.start = function () {
@@ -49,6 +57,7 @@ Game.prototype.start = function () {
 };
 
 Game.prototype._update = function () {
+  this._assignControlKeys();
   this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
   this._drawBoard();
   this._drawBall();
