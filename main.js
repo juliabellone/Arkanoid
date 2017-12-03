@@ -12,6 +12,7 @@ $(document).ready(function(){
     color: '#E3D4AB',
     ctx: ctx,
     canvas: canvas,
+    bricks: new Brick(canvas.width, canvas.height),
   });
   game.start();
 });

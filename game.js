@@ -1,6 +1,7 @@
 function Game(options) {
   this.ball = options.ball;
   this.bar = options.bar;
+  this.bricks = options.bricks;
   this.rows = options.rows;
   this.columns = options.columns;
   this.color = options.color;
@@ -28,6 +29,14 @@ Game.prototype._drawBar = function () {
   this.ctx.fillStyle = this.bar.color;
   this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
 };
+Game.prototype._drawBricks = function () {
+  this.bricks.generatePositionsBricks();
+  for (i=0; i<this.bricks.positions.length; i++){
+    //console.log(this.bricks.positions);
+    this.ctx.fillStyle = this.bricks.color;
+    this.ctx.fillRect(this.bricks.positions[i].x, this.bricks.positions[i].y, this.bricks.width-5, this.bricks.height-1);
+  }
+};
 var keys = [];
 Game.prototype._assignControlKeys = function () {
 
@@ -53,6 +62,7 @@ Game.prototype.start = function () {
   this._drawBoard();
   this._drawBall();
   this._drawBar();
+  this._drawBricks();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 
@@ -62,6 +72,7 @@ Game.prototype._update = function () {
   this._drawBoard();
   this._drawBall();
   this._drawBar();
+  this._drawBricks();
   this.ball.bounce();
   //bounce with Bar
   this.ball.barBounce(this.bar);
