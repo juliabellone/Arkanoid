@@ -30,11 +30,10 @@ Game.prototype._drawBar = function () {
   this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
 };
 Game.prototype._drawBricks = function () {
-  this.bricks.generatePositionsBricks();
   for (i=0; i<this.bricks.positions.length; i++){
     //console.log(this.bricks.positions);
     this.ctx.fillStyle = this.bricks.color;
-    this.ctx.fillRect(this.bricks.positions[i].x, this.bricks.positions[i].y, this.bricks.width-5, this.bricks.height-1);
+    this.ctx.fillRect(this.bricks.positions[i].x, this.bricks.positions[i].y, this.bricks.width-8, this.bricks.height);
   }
 };
 var keys = [];
@@ -62,6 +61,7 @@ Game.prototype.start = function () {
   this._drawBoard();
   this._drawBall();
   this._drawBar();
+  this.bricks.generatePositionsBricks();
   this._drawBricks();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
