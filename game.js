@@ -17,13 +17,13 @@ Game.prototype._generatePositionsBricks = function () {
       for(var j = 0; j < this.brickColumns; j++){
         var newBrick = new Brick({
           color:"red",
-          width:(this.canvasWidth-80)/this.brickColumns,
+          width:(this.canvasWidth-100)/this.brickColumns,
           height:25,
           x:valueX,
           y:valueY,
         });
          this.bricksArray.push(newBrick);
-         valueX +=(this.canvasWidth-80)/this.brickColumns;
+         valueX +=(this.canvasWidth-100)/this.brickColumns;
       }
       valueX = 40;
       valueY += 30;
@@ -31,12 +31,8 @@ Game.prototype._generatePositionsBricks = function () {
   console.log(this.bricksArray);
   };
 Game.prototype._drawBoard = function () {
-  for (var columnIndex = 0; columnIndex < this.columns; columnIndex++){
-    for(var rowIndex = 0; rowIndex < this.rows; rowIndex++) {
-      this.ctx.fillStyle = this.color;
-      this.ctx.fillRect(columnIndex * 10, rowIndex * 10, 10, 10);
-    }
-  }
+  this.ctx.fillStyle = this.color;
+  this.ctx.fillRect(0, 0, 500, 500);
 };
 
 Game.prototype._drawBall = function () {
@@ -96,7 +92,13 @@ Game.prototype._update = function () {
   this._drawBricks();
   this.ball.bounce();
   //bounce with Bar
-  this.ball.barBounce(this.bar);
-  this.ball.barBounceBricks(this.bricks);
+  if(this.ball.barBounce(this.bar)){
+    this.ball.vy = - this.ball.vy;
+  }
+
+  if(this.ball.bricksCollision(this.bricksArray)) {
+    this.ball.vy = - this.ball.vy;
+
+  }
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
