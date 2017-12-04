@@ -35,5 +35,8 @@ Ball.prototype.barBounce = function (bar) {
   if (ballBottom >= barTop && ballX + this.radius >= barLeftMargin && ballX - this.radius <= barRightMargin) {
     this.vy = - this.vy;
   }
+};
 
+Ball.prototype.barBounceBricks = function (brickObject) {
+//usar el metodo de la serpiente del array 
 };

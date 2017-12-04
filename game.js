@@ -1,14 +1,35 @@
 function Game(options) {
+  this.canvasWidth = options.canvasWidth;
+  this.canvasHeight = options.canvasHeight;
   this.ball = options.ball;
   this.bar = options.bar;
-  this.bricks = options.bricks;
-  this.rows = options.rows;
-  this.columns = options.columns;
+  this.brickColumns = options.brickColumns;
+  this.brickRows = options.brickRows;
+  this.bricksArray = options.bricksArray;
   this.color = options.color;
   this.ctx = options.ctx;
   this.canvas = options.canvas;
 }
-
+Game.prototype._generatePositionsBricks = function () {
+  var valueX = 40; // valor inicial al que le sumaremos una constante
+  var valueY = 40;
+  for(var i = 0; i < this.brickRows; i++) {
+      for(var j = 0; j < this.brickColumns; j++){
+        var newBrick = new Brick({
+          color:"red",
+          width:(this.canvasWidth-80)/this.brickColumns,
+          height:25,
+          x:valueX,
+          y:valueY,
+        });
+         this.bricksArray.push(newBrick);
+         valueX +=(this.canvasWidth-80)/this.brickColumns;
+      }
+      valueX = 40;
+      valueY += 30;
+    }
+  console.log(this.bricksArray);
+  };
 Game.prototype._drawBoard = function () {
   for (var columnIndex = 0; columnIndex < this.columns; columnIndex++){
     for(var rowIndex = 0; rowIndex < this.rows; rowIndex++) {
@@ -30,10 +51,10 @@ Game.prototype._drawBar = function () {
   this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
 };
 Game.prototype._drawBricks = function () {
-  for (i=0; i<this.bricks.positions.length; i++){
-    //console.log(this.bricks.positions);
-    this.ctx.fillStyle = this.bricks.color;
-    this.ctx.fillRect(this.bricks.positions[i].x, this.bricks.positions[i].y, this.bricks.width-8, this.bricks.height);
+  for (i=0; i<this.bricksArray.length; i++){
+    //console.log(this.bricksArray);
+    this.ctx.fillStyle = this.bricksArray[i].color;
+    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width-8, this.bricksArray[i].height);
   }
 };
 var keys = [];
@@ -61,7 +82,7 @@ Game.prototype.start = function () {
   this._drawBoard();
   this._drawBall();
   this._drawBar();
-  this.bricks.generatePositionsBricks();
+  this._generatePositionsBricks();
   this._drawBricks();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
@@ -76,5 +97,6 @@ Game.prototype._update = function () {
   this.ball.bounce();
   //bounce with Bar
   this.ball.barBounce(this.bar);
+  this.ball.barBounceBricks(this.bricks);
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
