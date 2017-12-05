@@ -11,22 +11,22 @@ function Game(options) {
   this.canvas = options.canvas;
 }
 Game.prototype._generatePositionsBricks = function () {
-  var valueX = 40; // valor inicial al que le sumaremos una constante
-  var valueY = 40;
+  var valueX = 0; // la mitad del margen que queramos darle para que los ladrillos queden centrados
+  var valueY = 0;
   for(var i = 0; i < this.brickRows; i++) {
       for(var j = 0; j < this.brickColumns; j++){
         var newBrick = new Brick({
           color:"red",
-          width:(this.canvasWidth-100)/this.brickColumns,
-          height:25,
+          width:(this.canvasWidth-5*this.brickColumns)/this.brickColumns,
+          height:((this.canvasHeight/3)/this.brickRows),
           x:valueX,
-          y:valueY,
+          y:valueY
         });
          this.bricksArray.push(newBrick);
-         valueX +=(this.canvasWidth-100)/this.brickColumns;
+         valueX +=(this.canvasWidth)/this.brickColumns+2,5; //margen horizontal de los ladrillos;
       }
-      valueX = 40;
-      valueY += 30;
+      valueX = 0;
+      valueY += ((this.canvasHeight/3)/this.brickRows) + 5; //margen vertical de los ladrillos
     }
   console.log(this.bricksArray);
   };
@@ -49,8 +49,9 @@ Game.prototype._drawBar = function () {
 Game.prototype._drawBricks = function () {
   for (i=0; i<this.bricksArray.length; i++){
     //console.log(this.bricksArray);
+    //el -6 es el margen entre ladrillos
     this.ctx.fillStyle = this.bricksArray[i].color;
-    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width-8, this.bricksArray[i].height);
+    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width, this.bricksArray[i].height);
   }
 };
 var keys = [];
@@ -73,6 +74,41 @@ Game.prototype._assignControlKeys = function () {
   //console.log(keys);
 };
 
+Game.prototype.bricksCollision = function () {
+  return this.bricksArray.some(function(brick, index, array) {
+    var ballX = this.ball.x;
+    var ballY = this.ball.y;
+    var ballRadius = this.ball.radius;
+    var brickX = brick.x;
+    var brickY = brick.y;
+    var brickWidth = brick.width;
+    var brickHeight = brick.height;
+    var distX = Math.abs(ballX - brickX);
+    var distY = Math.abs(ballY - brickY);
+
+        if (distX > (brickWidth / 2 + ballRadius)) {
+            return false;
+        }
+        if (distY > (brickHeight / 2 + ballRadius)) {
+            return false;
+        }
+        if (distX <= (brickWidth / 2)) {
+            // brick.height = 0;
+            // brick.width = 0;
+            array.splice(index, 1);
+            return true;
+        }
+        if (distY <= (brickHeight / 2)) {
+            // brick.height = 0;
+            // brick.width = 0;
+            array.splice(index, 1);
+            return true;
+        }
+        var hypot = (distX - brickWidth/2)*(distX- brickWidth/2) + (distY - brickHeight/2)*(distY - brickHeight/2);
+        return (hypot <= (ballRadius*ballRadius));
+
+  }.bind(this));
+  };
 Game.prototype.start = function () {
   this._assignControlKeys();
   this._drawBoard();
@@ -96,9 +132,8 @@ Game.prototype._update = function () {
     this.ball.vy = - this.ball.vy;
   }
 
-  if(this.ball.bricksCollision(this.bricksArray)) {
+  if(this.bricksCollision(this.bricksArray, this.ball)) {
     this.ball.vy = - this.ball.vy;
-
   }
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };

@@ -17,5 +17,6 @@ function Brick(options) {
   this.height = options.height;
   this.x = options.x;
   this.y = options.y;
+  this.margin = options.margin;
   //this.brickType = options.brickType;
 }

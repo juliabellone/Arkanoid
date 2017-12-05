@@ -9,7 +9,7 @@ $(document).ready(function(){
     canvasHeight: canvas.height,
     color: '#dfdfdf',
     brickRows: 4,
-    brickColumns: 6,
+    brickColumns: 5,
     bricksArray: [],
     ball: new Ball(canvas.width, canvas.height),
     bar: new Bar(canvas.width, canvas.height),

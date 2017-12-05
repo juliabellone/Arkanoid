@@ -1,10 +1,10 @@
 function Ball (canvasWidth, canvasHeight) {
-  this.x = 100;
-  this.y = 300;
+  this.x = 250;
+  this.y = 250;
   this.radius = 10;
   this.color = '#2e7d32';
-  this.vx = 5;
-  this.vy = 7;
+  this.vx = 1;
+  this.vy = 1;
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
 }
@@ -65,76 +65,10 @@ Ball.prototype.barBounce = function (bar) {
 //   });
 // };
 
-Ball.prototype.bricksCollision = function (bricksArray) {
-  var that = this;
-  return bricksArray.some(function(brick) {
-    var ballX = that.x;
-    var ballY = that.y;
-    var ballRadius = that.radius;
-    var brickX = brick.x;
-    var brickY = brick.y;
-    var brickWidth = brick.width;
-    var brickHeight = brick.height;
-    var distX = Math.abs(ballX - brickX - brickWidth / 2);
-    var distY = Math.abs(ballY - brickY - brickHeight / 2);
-
-        if (distX > (brickWidth / 2 + ballRadius)) {
-            return false;
-        }
-        if (distY > (brickHeight / 2 + ballRadius)) {
-            return false;
-        }
-        if (distX <= (brickWidth / 2)) {
-            return true;
-        }
-        if (distY <= (brickHeight / 2)) {
-            return true;
-        }
-        var dx = distX - brickWidth / 2;
-        var dy = distY - brickHeight / 2;
-        console.log("esquina");
-        return (dx * dx + dy * dy <= (ballRadius * ballRadius));
-  });
-  };
-
-// return true if the rectangle and circle are colliding
 // Ball.prototype.bricksCollision = function (bricksArray) {
-//   for (i=0; i<bricksArray.length; i++){
-//     console.log(i);
+//   return bricksArray.some(function(brick) {
 //     var ballX = this.x;
 //     var ballY = this.y;
-//     var ballRadius = this.radius;
-//     var brickX = bricksArray[i].x;
-//     var brickY = bricksArray[i].y;
-//     var brickWidth = bricksArray[i].width;
-//     var brickHeight = bricksArray[i].height;
-//     var distX = Math.abs(ballX - brickX - brickWidth / 2);
-//     var distY = Math.abs(ballY - brickY - brickHeight / 2);
-//
-//         if (distX > (brickWidth / 2 + ballRadius)) {
-//             return false;
-//         }
-//         if (distY > (brickHeight / 2 + ballRadius)) {
-//             return false;
-//         }
-//         if (distX <= (brickWidth / 2)) {
-//             return true;
-//         }
-//         if (distY <= (brickHeight / 2)) {
-//             return true;
-//         }
-//         var dx = distX - brickWidth / 2;
-//         var dy = distY - brickHeight / 2;
-//         return (dx * dx + dy * dy <= (ballRadius * ballRadius));
-//     }
-//   };
-//
-// Ball.prototype.bricksCollision = function (bricksArray) {
-//   var that = this;
-//   return bricksArray.forEach(function(brick){
-//     //console.log(that.x);
-//     var ballX = that.x;
-//     var ballY = that.y;
 //     var ballRadius = this.radius;
 //     var brickX = brick.x;
 //     var brickY = brick.y;
@@ -157,9 +91,41 @@ Ball.prototype.bricksCollision = function (bricksArray) {
 //         }
 //         var dx = distX - brickWidth / 2;
 //         var dy = distY - brickHeight / 2;
+//         console.log("esquina");
 //         return (dx * dx + dy * dy <= (ballRadius * ballRadius));
-//   });
-// };
+//   }.bind(this));
+//   };
+///ESTA ES LA BUENA
+// Ball.prototype.bricksCollision = function (bricksArray) {
+//   return bricksArray.some(function(brick) {
+//     var ballX = this.x;
+//     var ballY = this.y;
+//     var ballRadius = this.radius;
+//     var brickX = brick.x;
+//     var brickY = brick.y;
+//     var brickWidth = brick.width;
+//     var brickHeight = brick.height;
+//     var distX = Math.abs(ballX - brickX);
+//     var distY = Math.abs(ballY - brickY);
+//
+//         if (distX > (brickWidth / 2 + ballRadius)) {
+//             return false;
+//         }
+//         if (distY > (brickHeight / 2 + ballRadius)) {
+//             return false;
+//         }
+//         if (distX <= (brickWidth / 2)) {
+//             return true;
+//         }
+//         if (distY <= (brickHeight / 2)) {
+//             return true;
+//         }
+//         var hypot = (distX - brickWidth/2)*(distX- brickWidth/2) + (distY - brickHeight/2)*(distY - brickHeight/2);
+//         return (hypot <= (ballRadius*ballRadius));
+//
+//   }.bind(this));
+//   };
+
 //};.e.prototype.collidesWith = function (position) {
 //   return this.body.some(function(bodyPiece) {
 //     return bodyPiece.row === position.row && bodyPiece.column === position.column;
