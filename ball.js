@@ -3,7 +3,7 @@ function Ball (canvasWidth, canvasHeight) {
   this.y = 250;
   this.radius = 10;
   this.color = '#2e7d32';
-  this.vx = 2;
+  this.vx = 5;
   this.vy = 7;
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
@@ -22,7 +22,7 @@ Ball.prototype.bounce = function () {
   }
   if (this.y + this.vy > this.canvasHeight - this.radius) {
     this.vx = 0;
-    this.vy = 0;
+    this.vy = 0;  
   }
 };
 
@@ -41,10 +41,10 @@ Ball.prototype.barBounce = function (bar) {
       var distY = Math.abs(ballY - barY - barHeight / 2);
 
       if (distX > (barWidth / 2 + ballRadius)) {
-          return {value: false};
+          return {value: false, ballX: ballX, barX: barX};
       }
       if (distY > (barHeight / 2 + ballRadius)) {
-          return {value: false};
+          return {value: false, ballX: ballX, barX: barX};
       }
       if (distX <= (barWidth / 2)) {
           return {value: true, ballX: ballX, barX: barX};
@@ -57,7 +57,9 @@ Ball.prototype.barBounce = function (bar) {
       var dy = distY - barHeight / 2;
       if (dx * dx + dy * dy <= (ballRadius * ballRadius)){
         return {value: true, ballX: ballX, barX: barX};
-      } else {return {value: false};}
+      } else {
+        return {value: false, ballX, barX};
+      }
 
 };
 

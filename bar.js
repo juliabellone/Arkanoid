@@ -20,7 +20,6 @@ Bar.prototype._barLimits = function () {
   }
 };
 
-// a mejorar el movimiento de la barra y la colision con los lados
 Bar.prototype.goLeft = function () {
   if (this.direction == 'right') {
     this.vx = 0;
@@ -29,8 +28,6 @@ Bar.prototype.goLeft = function () {
   this.x = this.x + this.vx;
   if (this.vx > -this.maxSpeed) {
     this.vx -=0.7;
-    // console.log("esto es x "+this.x);
-    // console.log("izquierda "+this.vx);
   }
 this._barLimits();
 };
