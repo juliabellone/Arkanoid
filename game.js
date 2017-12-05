@@ -52,6 +52,19 @@ Game.prototype._drawBricks = function () {
     //el -6 es el margen entre ladrillos
     this.ctx.fillStyle = this.bricksArray[i].color;
     this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width, this.bricksArray[i].height);
+    //luz ladrillos
+    this.ctx.fillStyle = "#ff8787";
+    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,this.bricksArray[i].width,5);
+    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,5,this.bricksArray[i].height);
+    //sombra ladrillos
+    this.ctx.fillStyle = "#9b0000";
+    this.ctx.fillRect(this.bricksArray[i].x,
+    (this.bricksArray[i].y + this.bricksArray[i].height)-5,
+    this.bricksArray[i].width,
+    5);
+    this.ctx.fillRect((this.bricksArray[i].x+this.bricksArray[i].width)-5, this.bricksArray[i].y,5,this.bricksArray[i].height);
+
+
   }
 };
 var keys = [];
