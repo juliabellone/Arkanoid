@@ -83,8 +83,8 @@ Game.prototype.bricksCollision = function () {
     var brickY = brick.y;
     var brickWidth = brick.width;
     var brickHeight = brick.height;
-    var distX = Math.abs(ballX - brickX);
-    var distY = Math.abs(ballY - brickY);
+    var distX = Math.abs(ballX - brickX - brickWidth/2);
+    var distY = Math.abs(ballY - brickY - brickHeight/2);
 
         if (distX > (brickWidth / 2 + ballRadius)) {
             return false;
@@ -104,8 +104,9 @@ Game.prototype.bricksCollision = function () {
             array.splice(index, 1);
             return true;
         }
-        var hypot = (distX - brickWidth/2)*(distX- brickWidth/2) + (distY - brickHeight/2)*(distY - brickHeight/2);
-        return (hypot <= (ballRadius*ballRadius));
+        var dx = distX - brickWidth / 2;
+        var dy = distY -brickHeight / 2;
+        return (dx * dx + dy * dy <= (ballRadius*ballRadius));
 
   }.bind(this));
   };
@@ -124,11 +125,25 @@ Game.prototype._update = function () {
   this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
   this._drawBoard();
   this._drawBall();
+  // console.log ("vy: "+this.ball.vy);
+  // console.log ("vx: "+ this.ball.vx);
   this._drawBar();
   this._drawBricks();
   this.ball.bounce();
   //bounce with Bar
-  if(this.ball.barBounce(this.bar)){
+  if(this.ball.barBounce(this.bar).value){
+    var ballX = this.ball.barBounce(this.bar).ballX;
+    var barX = this.ball.barBounce(this.bar).barX;
+    //pelota rebota en el lado izquierdo de la pala
+    if(this.ball.vx > 0 && ballX < barX + this.bar.width*0.3) {
+      this.ball.vx = - this.ball.vx;
+      console.log("izquierda");
+    }
+    //pelota rebota en el lado derecho de la pala
+    if(this.ball.vx < 0 && ballX > barX + this.bar.width*0.7) {
+      this.ball.vx = - this.ball.vx;
+      console.log("derecha");
+    }
     this.ball.vy = - this.ball.vy;
   }
 

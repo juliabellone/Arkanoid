@@ -3,8 +3,8 @@ function Ball (canvasWidth, canvasHeight) {
   this.y = 250;
   this.radius = 10;
   this.color = '#2e7d32';
-  this.vx = 1;
-  this.vy = 1;
+  this.vx = 2;
+  this.vy = 7;
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
 }
@@ -41,22 +41,24 @@ Ball.prototype.barBounce = function (bar) {
       var distY = Math.abs(ballY - barY - barHeight / 2);
 
       if (distX > (barWidth / 2 + ballRadius)) {
-          return false;
+          return {value: false};
       }
       if (distY > (barHeight / 2 + ballRadius)) {
-          return false;
+          return {value: false};
       }
-
       if (distX <= (barWidth / 2)) {
-          return true;
-      }
+          return {value: true, ballX: ballX, barX: barX};
+          }
       if (distY <= (barHeight / 2)) {
-          return true;
+          return {value: true, ballX: ballX, barX: barX};
       }
 
       var dx = distX - barWidth / 2;
       var dy = distY - barHeight / 2;
-      return (dx * dx + dy * dy <= (ballRadius * ballRadius));
+      if (dx * dx + dy * dy <= (ballRadius * ballRadius)){
+        return {value: true, ballX: ballX, barX: barX};
+      } else {return {value: false};}
+
 };
 
 // Snake.prototype.collidesWith = function (position) {
