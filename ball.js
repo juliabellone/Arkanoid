@@ -1,12 +1,13 @@
 function Ball (canvasWidth, canvasHeight) {
-  this.x = 250;
-  this.y = 250;
-  this.radius = 10;
-  this.color = '#2e7d32';
-  this.vx = 5;
-  this.vy = 7;
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
+  this.radius = 10;
+  this.x = null;
+  this.y = null;
+  this.color = '#2e7d32';
+  this.vx = 0;
+  this.vy = 0;
+  this.status = null;
 }
 
 Ball.prototype.bounce = function () {
@@ -22,7 +23,8 @@ Ball.prototype.bounce = function () {
   }
   if (this.y + this.vy > this.canvasHeight - this.radius) {
     this.vx = 0;
-    this.vy = 0;  
+    this.vy = 0;
+    this.status =  'gameOver';
   }
 };
 
