@@ -10,6 +10,7 @@ function Game(options) {
   this.ctx = options.ctx;
   this.canvas = options.canvas;
   this.intervalGame = options.intervalGame;
+  this.status = options.status;
 }
 Game.prototype._generatePositionsBricks = function () {
   var valueX = 0; // la mitad del margen que queramos darle para que los ladrillos queden centrados
@@ -135,16 +136,23 @@ Game.prototype.bricksCollision = function () {
   };
 
 Game.prototype._stop = function () {
-  window.clearInterval(this.intervalGame);
-  console.log("hola");
+  console.log(this.status);
+  if (this.status == 'playing'){
+      window.cancelAnimationFrame(this.intervalGame);
+      this.status = 'stop';
+  } else {
+  this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
+  this.status = 'playing';
+  }
 };
 
 Game.prototype._win = function () {
+ window.cancelAnimationFrame(this.intervalGame);
  alert ("¡nivel superado!");
 };
 
 Game.prototype._gameOver = function () {
-  window.clearInterval(this.intervalGame);
+  window.cancelAnimationFrame(this.intervalGame);
   alert ("game Over");
 };
 
@@ -155,6 +163,7 @@ Game.prototype.start = function () {
   this._drawBar();
   this._generatePositionsBricks();
   this._drawBricks();
+  this.status = 'playing';
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 

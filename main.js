@@ -8,14 +8,15 @@ $(document).ready(function(){
     canvasWidth: canvas.width,
     canvasHeight: canvas.height,
     color: '#dfdfdf',
-    brickRows: 6,
-    brickColumns: 6,
+    brickRows: 5,
+    brickColumns: 11,
     bricksArray: [],
     ball: new Ball(canvas.width, canvas.height),
     bar: new Bar(canvas.width, canvas.height),
     ctx: ctx,
     canvas: canvas,
     intervalGame: null,
+    status: null,
   });
   game.start();
 });
