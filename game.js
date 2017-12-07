@@ -8,7 +8,6 @@ function Game(options) {
   this.bricksArray = options.bricksArray;
   this.color = options.color;
   this.ctx = options.ctx;
-  this.canvas = options.canvas;
   this.intervalGame = options.intervalGame;
   this.status = options.status;
   this.level = options.level;
@@ -33,7 +32,8 @@ Game.prototype._generatePositionsBricks = function () {
       valueY += ((this.canvasHeight/3)/this.brickRows) + 2,5; //margen vertical de los ladrillos
     }
   console.log(this.bricksArray);
-  };
+};
+
 Game.prototype._drawBoard = function () {
   this.ctx.fillStyle = this.color;
   this.ctx.fillRect(0, 0, 500, 500);
@@ -46,10 +46,12 @@ Game.prototype._drawBall = function () {
   this.ctx.fillStyle = this.ball.color;
   this.ctx.fill();
 };
+
 Game.prototype._drawBar = function () {
   this.ctx.fillStyle = this.bar.color;
   this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
 };
+
 Game.prototype._drawBricks = function () {
   for (i=0; i<this.bricksArray.length; i++){
     //console.log(this.bricksArray);
@@ -82,10 +84,9 @@ Game.prototype._launchBall = function () {
   this.ball.vy = -7;
 };
 
-
 var keys = [];
-
 Game.prototype._assignControlKeys = function () {
+
 
   document.onkeydown = function (e) {
     if (e.keyCode == 32) {
@@ -113,11 +114,13 @@ Game.prototype._assignControlKeys = function () {
   if (keys[39]) {
     this.bar.goRight();
   }
-
-//console.log(keys);
 };
 
+// Game.prototype.ballCollisions = function () {
+//
+// }
 Game.prototype.bricksCollision = function () {
+
   return this.bricksArray.some(function(brick, index, array) {
     var ballX = this.ball.x;
     var ballY = this.ball.y;
@@ -155,7 +158,7 @@ Game.prototype.bricksCollision = function () {
   };
 
 Game.prototype._pause = function () {
-  console.log(this.status);
+  //console.log(this.status);
   if (this.status == 'playing'){
       window.cancelAnimationFrame(this.intervalGame);
       this.status = 'pause';
@@ -166,14 +169,9 @@ Game.prototype._pause = function () {
 };
 
 Game.prototype._win = function () {
- alert ("¡nivel superado!");
  this.status = 'win';
- window.cancelAnimationFrame(this.intervalGame);
-};
-
-Game.prototype._gameOver = function () {
-  alert ("game Over");
-  window.cancelAnimationFrame(this.intervalGame);
+ this.ball.vy = 0;
+ this.ball.vx = 0;
 };
 
 Game.prototype.start = function () {
@@ -190,8 +188,8 @@ Game.prototype.newLevel = function () {
   return (this.status == 'win');
 };
 Game.prototype._update = function () {
-  console.log(this.status)
-  this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+  //console.log(this.status);
+  this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == null){
       this._launchStatus();
   }
@@ -200,6 +198,10 @@ Game.prototype._update = function () {
   this._drawBar();
   this._drawBricks();
   this.ball.bounce();
+  if(this.ball.hitBottom()) {
+    this.status = 'gameOver';
+  }
+
   //bounce with Bar
   if(this.ball.barBounce(this.bar).value){
     var ballX = this.ball.barBounce(this.bar).ballX;
@@ -214,18 +216,17 @@ Game.prototype._update = function () {
       this.ball.vx = - this.ball.vx;
       console.log("derecha");
     }
-    this.ball.vy = - this.ball.vy;
+    this.ball.vy = - this.ball.vy*1.1;
   }
 
   if(this.bricksCollision(this.bricksArray, this.ball)) {
     this.ball.vy = - this.ball.vy;
   }
-  this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
-  if (this.bricksArray.length == 13) {
+
+  if (this.bricksArray.length == 20) {
     this._win();
   }
-  if(this.ball.status == 'gameOver') {
-    this._gameOver();
-  }
+
   this._assignControlKeys();
+  this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
