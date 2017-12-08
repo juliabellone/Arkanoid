@@ -16,6 +16,7 @@ $(document).ready(function(){
     ctx: ctx,
     intervalGame: null,
     status: null,
+    levels: new Levels(canvas.width, canvas.height),
     level: 1,
   });
   game.start();

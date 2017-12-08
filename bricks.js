@@ -1,22 +1,21 @@
-// function Brick (canvasWidth, canvasHeight) {
-//   this.canvasWidth = canvasWidth;
-//   this.canvasHeight = canvasHeight;
-//   this.color = 'red';
-//   this.brickColumns = 8;
-//   this.brickRows = 5;
-//   this.width = (this.canvasWidth-80)/this.brickColumns;
-//   this.height = 25;
-//   this.x = null;
-//   this.y = null;
-//   this.bricksArray = [];
-// }
-
 function Brick(options) {
   this.color = options.color;
+  this.colorLight = options.colorLight;
+  this.colorShadow = options.colorShadow;
   this.width = options.width;
   this.height = options.height;
   this.x = options.x;
   this.y = options.y;
-  this.margin = options.margin;
-  //this.brickType = options.brickType;
+  this.type = options.type;
+}
+
+var arrayColors = ['#FF451E', '#FFE11E', '#5927BF', '#17C759'];
+var arrayLights = ['#FF8C74', '#FFEC74', '#906DD7', '#64DD91'];
+var arrayShadows = ['#BB2000', '#BBA200',  '#310B80', '#008833'];
+
+var Level1 = [];
+
+function generateLevel1() {
+
+
 }

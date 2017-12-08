@@ -7,7 +7,7 @@ function Bar (canvasWidth, canvasHeight) {
   this.x = this.canvasWidth/2 - this.width/2;
   this.y = this.canvasHeight - this.height;
   this.vx = 0;
-  this.maxSpeed = 25;
+  this.maxSpeed = 20;
   this.direction = null; //se puede usar para botar diferente segun la direccion de la barra y la tecla pulsada
 }
 
@@ -30,7 +30,7 @@ Bar.prototype.goLeft = function () {
   this.direction = 'left';
   this.x = this.x + this.vx;
   if (this.vx > -this.maxSpeed) {
-    this.vx -=0.7;
+    this.vx -=0.6;
   }
 this._barLimits();
 };
@@ -42,7 +42,7 @@ Bar.prototype.goRight = function () {
   this.direction = 'right';
   this.x = this.x + this.vx;
   if (this.vx < this.maxSpeed){
-    this.vx +=0.7;
+    this.vx +=0.6;
     // console.log("esto es x "+this.x);
     // console.log("derecha "+this.vx);
   }
