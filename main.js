@@ -7,7 +7,7 @@ $(document).ready(function(){
   game = new Game({
     canvasWidth: canvas.width,
     canvasHeight: canvas.height,
-    color: '#dfdfdf',
+    color: '#ededed',
     brickRows: 6,
     brickColumns: 5,
     bricksArray: [],

@@ -25,20 +25,25 @@ Levels.prototype.generateLevel1 = function () {
   this.level1 = [];
   valueX = 40;
   valueY = 40;
-  for(var i = 0; i < 3; i++) {                          //rows
-      for(var j = 0; j < 12; j++){                    //columns
+  var newColor = 0;
+  for(var i = 0; i < 7; i++) {
+      for(var j = 0; j < 12; j++){
         var newBrick = new Brick({
-          color: this.colors[i],
-          colorShadow: this.shadows[i],
-          colorLight: this.lights[i],
+          color: this.colors[newColor],
+          colorShadow: this.shadows[newColor],
+          colorLight: this.lights[newColor],
           width:50,
           height:20,
           x:valueX,
           y:valueY
         });
-         this.level1.push(newBrick);
-         valueX += 60;
+        this.level1.push(newBrick);
+        valueX += 60;
         }
+      if (newColor < this.colors.length-1){
+        newColor++;
+      }
+      else {newColor = 0;}
       valueX = 40;
       valueY += 25;
     }

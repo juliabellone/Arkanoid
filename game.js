@@ -23,8 +23,19 @@ Game.prototype._drawBoard = function () {
 Game.prototype._drawBall = function () {
   this.ctx.beginPath();
   this.ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2, true);
-  this.ctx.closePath();
-  this.ctx.fillStyle = this.ball.color;
+  this.ctx.fillStyle = this.ball.shadowColor;
+  this.ctx.fill();
+  this.ctx.beginPath();
+  this.ctx.arc(this.ball.x-1, this.ball.y-1, this.ball.radius-2, 0, Math.PI * 2, true);
+  this.ctx.fillStyle = this.ball.mediumColor1;
+  this.ctx.fill();
+  this.ctx.beginPath();
+  this.ctx.arc(this.ball.x-2, this.ball.y-2, this.ball.radius-3, 0, Math.PI * 2, true);
+  this.ctx.fillStyle = this.ball.mediumColor2;
+  this.ctx.fill();
+  this.ctx.beginPath();
+  this.ctx.arc(this.ball.x-4, this.ball.y-4, this.ball.radius-7, 0, Math.PI * 2, true);
+  this.ctx.fillStyle = this.ball.lightColor;
   this.ctx.fill();
 };
 
