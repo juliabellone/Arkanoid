@@ -139,17 +139,26 @@ Game.prototype.bricksCollision = function () {
         if (distX <= (brickWidth / 2)) {
             // brick.height = 0;
             // brick.width = 0;
-            array.splice(index, 1);
+            if(brick.type != 'unb'){
+              array.splice(index, 1);
+            }
             return true;
         }
         if (distY <= (brickHeight / 2)) {
             // brick.height = 0;
             // brick.width = 0;
-            array.splice(index, 1);
+            if(brick.type != 'unb'){
+              array.splice(index, 1);
+            }
             return true;
         }
         var dx = distX - brickWidth / 2;
         var dy = distY -brickHeight / 2;
+        if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
+          if(brick.type != 'unb'){
+            array.splice(index, 1);
+          }
+        }
         return (dx * dx + dy * dy <= (ballRadius*ballRadius));
 
   }.bind(this));
@@ -202,11 +211,16 @@ Game.prototype.start = function () {
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 
+Game.prototype._checkIfWin = function () {
+  return this.bricksArray.some(function (brick) {
+  return   brick.type == 'normal';
+  });
+};
 
 Game.prototype._update = function () {
-  console.log(this.level);
-  console.log(this.status);
-  console.log(this.bricksArray);
+   //console.log(this.level);
+  // console.log(this.status);
+  // console.log(this.bricksArray);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win'){
       this._launchStatus();
@@ -240,11 +254,17 @@ Game.prototype._update = function () {
   if(this.bricksCollision(this.bricksArray, this.ball)) {
     this.ball.vy = - this.ball.vy;
   }
-
-  if (this.bricksArray.length == 33) {
+  //checks if there is any normal bricks left
+  if (!this._checkIfWin()) {
     this.status = 'win';
     this._win();
   }
+
+
+  // if (this.bricksArray.length == 33) {
+  //   this.status = 'win';
+  //   this._win();
+  // }
 
   this._assignControlKeys();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
