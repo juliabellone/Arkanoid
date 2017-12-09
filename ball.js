@@ -4,7 +4,7 @@ function Ball (canvasWidth, canvasHeight) {
   this.radius = 10;
   this.x = null;
   this.y = null;
-  this.color = '#2e7d32';
+  this.color = 'black';
   this.vx = 0;
   this.vy = 0;
   this.status = null;

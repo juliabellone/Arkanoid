@@ -22,8 +22,9 @@ function Brick(options) {
 }
 
 Levels.prototype.generateLevel1 = function () {
-  valueX = 30;
-  valueY = 30;
+  this.level1 = [];
+  valueX = 40;
+  valueY = 40;
   for(var i = 0; i < 3; i++) {                          //rows
       for(var j = 0; j < 12; j++){                    //columns
         var newBrick = new Brick({
@@ -38,21 +39,23 @@ Levels.prototype.generateLevel1 = function () {
          this.level1.push(newBrick);
          valueX += 60;
         }
-      valueX = 30;
+      valueX = 40;
       valueY += 25;
     }
 };
 
 Levels.prototype.generateLevel2 = function () {
-  valueX = 30;
-  valueY = 30;
+  this.level2 = [];
+  valueX = 40;
+  valueY = 40;
   for(var i = 0; i < 12; i++) { //filas
       var rowLenght = 12;
       for(var j = 0; j < rowLenght-i; j++){ //columnas
+        var r = Math.floor(Math.random()*4);
         var newBrick = new Brick({
-          color: this.colors[1],
-          colorShadow: this.shadows[1],
-          colorLight: this.lights[1],
+          color: this.colors[r],
+          colorShadow: this.shadows[r],
+          colorLight: this.lights[r],
           width:50,
           height:20,
           x:valueX,
@@ -62,11 +65,33 @@ Levels.prototype.generateLevel2 = function () {
         valueX += 60;
         }
 
-      valueX = 30;
+      valueX = 40;
       valueY += 25;
     }
 };
 
+Levels.prototype.generateLevel3 = function () {
+  this.level3 = [];
+  valueX = 40;
+  valueY = 40;
+  for(var i = 0; i < 4; i++) {                          //rows
+      for(var j = 0; j < 12; j++){                    //columns
+        var newBrick = new Brick({
+          color: this.colors[i],
+          colorShadow: this.shadows[i],
+          colorLight: this.lights[i],
+          width:50,
+          height:20,
+          x:valueX,
+          y:valueY
+        });
+         this.level3.push(newBrick);
+         valueX += 60;
+        }
+      valueX = 40;
+      valueY += 25;
+    }
+};
 
 
 

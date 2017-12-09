@@ -1,7 +1,7 @@
 function Bar (canvasWidth, canvasHeight) {
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
-  this.color = '#2e7d32';
+  this.color = 'black';
   this.width = 125;
   this.height = 15;
   this.x = this.canvasWidth/2 - this.width/2;

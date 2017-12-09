@@ -10,31 +10,10 @@ function Game(options) {
   this.ctx = options.ctx;
   this.intervalGame = options.intervalGame;
   this.status = options.status;
+  this.level = options.level;
   this.levels = options.levels;
 }
 
-
-
-// Game.prototype._generatePositionsBricks = function () {
-//   var valueX = 0; // la mitad del margen que queramos darle para que los ladrillos queden centrados
-//   var valueY = 0;
-//   for(var i = 0; i < this.brickRows; i++) {
-//       for(var j = 0; j < this.brickColumns; j++){
-//         var newBrick = new Brick({
-//           color:"red",
-//           width:(this.canvasWidth-5*this.brickColumns)/this.brickColumns,
-//           height:((this.canvasHeight/3)/this.brickRows),
-//           x:valueX,
-//           y:valueY
-//         });
-//          this.bricksArray.push(newBrick);
-//          valueX +=(this.canvasWidth)/this.brickColumns+2,5; //margen horizontal de los ladrillos;
-//       }
-//       valueX = 0;
-//       valueY += ((this.canvasHeight/3)/this.brickRows) + 2,5; //margen vertical de los ladrillos
-//     }
-//   console.log(this.bricksArray);
-// };
 
 Game.prototype._drawBoard = function () {
   this.ctx.fillStyle = this.color;
@@ -55,29 +34,36 @@ Game.prototype._drawBar = function () {
 };
 
 Game.prototype._drawBricks = function () {
+  var effect = 3;
   for (i=0; i<this.bricksArray.length; i++){
     //console.log(this.bricksArray);
     this.ctx.fillStyle = this.bricksArray[i].color;
     this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width, this.bricksArray[i].height);
     //luz ladrillos
     this.ctx.fillStyle = this.bricksArray[i].colorLight;
-    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,this.bricksArray[i].width,5);
-    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,5,this.bricksArray[i].height);
+    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,this.bricksArray[i].width,effect);
+    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,effect,this.bricksArray[i].height);
     //sombra ladrillos
     this.ctx.fillStyle = this.bricksArray[i].colorShadow;
     this.ctx.fillRect(this.bricksArray[i].x,
-    (this.bricksArray[i].y + this.bricksArray[i].height)-5,
+    (this.bricksArray[i].y + this.bricksArray[i].height)-effect,
     this.bricksArray[i].width,
-    5);
-    this.ctx.fillRect((this.bricksArray[i].x+this.bricksArray[i].width), this.bricksArray[i].y,5,this.bricksArray[i].height);
+    effect);
+    this.ctx.fillRect((this.bricksArray[i].x+this.bricksArray[i].width), this.bricksArray[i].y,effect,this.bricksArray[i].height);
   }
 };
 
 Game.prototype._launchStatus = function () {
+  //establece la barra en el centro
+  this.x = this.canvasWidth/2 - this.width/2;
+  this.y = this.canvasHeight - this.height;
   //establece la pelota encima de la barra y hace que la siga;
   this.ball.x = this.canvasWidth/2;
   this.ball.y = this.canvasHeight - this.ball.radius - this.bar.height;
   this.ball.x = this.bar.x + this.bar.width/2;
+  //para la velocidad de la pelota
+  this.ball.vx = 0;
+  this.ball.vy = 0;
 };
 Game.prototype._launchBall = function () {
   //lanza la pelota hacia arriba y cambia el estado de la partida
@@ -92,7 +78,7 @@ Game.prototype._assignControlKeys = function () {
 
   document.onkeydown = function (e) {
     if (e.keyCode == 32) {
-      if (this.status == null) {
+      if (this.status == 'win') {
       this._launchBall();
       } else {
       this._pause();
@@ -170,34 +156,48 @@ Game.prototype._pause = function () {
 };
 
 Game.prototype._win = function () {
- this.status = 'win';
- this.ball.vy = 0;
- this.ball.vx = 0;
+ if (this.level < 3){
+  this.level++;
+  this._assignLevel();
+  this._drawBall();
+  this._drawBar();
+  this._drawBricks();
+ }
 };
 
-
-Game.prototype.start = function () {
+Game.prototype._assignLevel = function () {
   this.levels.generateLevel1();
   this.levels.generateLevel2();
-  this.bricksArray = this.levels.level2;
-  // for (i=1; i<=this.level; i++) {
-  //   this.bricksArray = this.levels.level[i];
-  //
-  // }this.levels.generateLevel1();
+  this.levels.generateLevel3();
+  //this.bricksArray = this.levels.level1;
 
+  switch (this.level) {
+    case 1: this.bricksArray = this.levels.level1;
+    break;
+    case 2: this.bricksArray = this.levels.level2;
+    break;
+    case 3: this.bricksArray = this.levels.level3;
+    break;
+   }
+};
+
+Game.prototype.start = function () {
+  this._assignLevel();
   this._assignControlKeys();
   this._drawBoard();
   this._drawBall();
   this._drawBar();
-  //this._generatePositionsBricks();
   this._drawBricks();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 
 
 Game.prototype._update = function () {
+  console.log(this.level);
+  console.log(this.status);
+  console.log(this.bricksArray);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
-  if (this.status == null){
+  if (this.status == 'win'){
       this._launchStatus();
   }
   this._drawBoard();
@@ -216,12 +216,12 @@ Game.prototype._update = function () {
     //pelota rebota en el lado izquierdo de la pala
     if(this.ball.vx > 0 && ballX < barX + this.bar.width*0.3) {
       this.ball.vx = - this.ball.vx;
-      console.log("izquierda");
+      //console.log("izquierda");
     }
     //pelota rebota en el lado derecho de la pala
     if(this.ball.vx < 0 && ballX > barX + this.bar.width*0.7) {
       this.ball.vx = - this.ball.vx;
-      console.log("derecha");
+      //console.log("derecha");
     }
     this.ball.vy = - this.ball.vy;
   }
@@ -230,9 +230,9 @@ Game.prototype._update = function () {
     this.ball.vy = - this.ball.vy;
   }
 
-  if (this.bricksArray.length == 0) {
+  if (this.bricksArray.length == 33) {
+    this.status = 'win';
     this._win();
-    this.level++;
   }
 
   this._assignControlKeys();
