@@ -1,3 +1,50 @@
+
+/*Intrustions style*/
+body {
+  font-family: sans-serif;
+  color: #303030;
+}
+
+main {
+  width: 800px;
+  height: 550px;
+  padding: 30px;
+  background-color: #F5F5F5;
+  border: 3px solid #696969;
+  border-radius: 10px;
+  margin:auto;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 20px 0px;
+}
+
+#spacebar {
+  width: 200px;
+  text-align: left;
+}
+
+#arrows {
+  width :150px;
+  text-align: left;
+}
+
+#enter {
+  font-size: 22px;
+  font-weight: bold;
+  color: #FF0000;
+  text-align: center;
+  margin: 15px 0px;
+}
+
+/*Game Styles*/
 game {
   display: flex;
   justify-content: center;
@@ -6,7 +53,6 @@ game {
 }
 
 footer {
-
   width: 100%;
   display: flex;
   justify-content: space-around;
