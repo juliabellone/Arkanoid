@@ -89,18 +89,27 @@ Game.prototype._assignControlKeys = function () {
 
   document.onkeydown = function (e) {
     if (e.keyCode == 32) {
-      if (this.status == 'win') {
+      if (this.status == null) {
       this._launchBall();
       } else {
       this._pause();
       }
     }
+    //Tecla trampa para pasar de nivel con enter
+    if (e.keyCode == 13) {
+      this.status = 'win';
+      this._win();
+    }
+  }.bind(this);
+
+  document.onkeyup = function (e) {
+    if(e.keyCode == 37 || e.keyCode == 39) {
+      this.bar.vx = 0;
+    }
   }.bind(this);
 
   window.addEventListener("keydown", function (e) {
-
     keys[e.keyCode] = true;
-
   });
   window.addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
@@ -176,51 +185,60 @@ Game.prototype._pause = function () {
 };
 
 Game.prototype._win = function () {
- if (this.level < 3){
+ if (this.level < 4){
   this.level++;
   this._assignLevel();
   this._drawBall();
   this._drawBar();
   this._drawBricks();
+  console.log(this.bricksArray);
  }
 };
 
 Game.prototype._assignLevel = function () {
-  this.levels.generateLevel1();
-  this.levels.generateLevel2();
-  this.levels.generateLevel3();
-  //this.bricksArray = this.levels.level1;
-
   switch (this.level) {
-    case 1: this.bricksArray = this.levels.level1;
+    case 1:
+    this.levels.generateLevel1();
+    this.bricksArray = this.levels.level1;
     break;
-    case 2: this.bricksArray = this.levels.level2;
+    case 2:
+    this.levels.generateLevel2();
+    this.bricksArray = this.levels.level2;
     break;
-    case 3: this.bricksArray = this.levels.level3;
+    case 3:
+    this.levels.generateLevel3();
+    this.bricksArray = this.levels.level3;
+    break;
+    case 4:
+    this.levels.generateLevel4();
+    this.bricksArray = this.levels.level4;
     break;
    }
 };
 
 Game.prototype.start = function () {
+  console.log(this.bricksArray)
   this._assignLevel();
   this._assignControlKeys();
   this._drawBoard();
   this._drawBall();
   this._drawBar();
   this._drawBricks();
+  this._launchStatus();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
+
 };
 
-Game.prototype._checkIfWin = function () {
-  return this.bricksArray.some(function (brick) {
-  return   brick.type == 'normal';
-  });
-};
+// Game.prototype._checkIfWin = function () {
+//   return this.bricksArray.some(function (brick) {
+//   return brick.type == 'normal';
+//   });
+// };
 
 Game.prototype._update = function () {
-   //console.log(this.level);
-  // console.log(this.status);
-  // console.log(this.bricksArray);
+   console.log(this.level);
+   console.log(this.status);
+
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win'){
       this._launchStatus();
@@ -254,14 +272,9 @@ Game.prototype._update = function () {
   if(this.bricksCollision(this.bricksArray, this.ball)) {
     this.ball.vy = - this.ball.vy;
   }
+  //COMENTADO TEMPORAL PARA PROBAR LOS NIVELES, DEJAR COMO  ANTES
   //checks if there is any normal bricks left
-  if (!this._checkIfWin()) {
-    this.status = 'win';
-    this._win();
-  }
-
-
-  // if (this.bricksArray.length == 33) {
+  // if (!this._checkIfWin()) {
   //   this.status = 'win';
   //   this._win();
   // }

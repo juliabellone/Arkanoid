@@ -15,7 +15,7 @@ $(document).ready(function(){
     bar: new Bar(canvas.width, canvas.height),
     ctx: ctx,
     intervalGame: null,
-    status: 'win',
+    status: null,
     levels: new Levels(canvas.width, canvas.height),
     level: 1,
   });

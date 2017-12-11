@@ -8,6 +8,7 @@ function Levels (canvasWidth, canvasHeight) {
   this.level1 = [];
   this.level2 = [];
   this.level3 = [];
+  this.level4 = [];
 }
 
 function Brick(options) {
@@ -21,77 +22,37 @@ function Brick(options) {
   this.type = options.type;
 }
 
-// Levels.prototype.generateLevel1 = function () {
-//   this.level1 = [];
-//   valueX = 40;
-//   valueY = 40;
-//   var newColor = 0;
-//   for(var i = 0; i < 7; i++) {
-//       for(var j = 0; j < 12; j++){
-//         var newBrick = new Brick({
-//           color: this.colors[newColor],
-//           colorShadow: this.shadows[newColor],
-//           colorLight: this.lights[newColor],
-//           width:50,
-//           height:20,
-//           x:valueX,
-//           y:valueY
-//         });
-//         this.level1.push(newBrick);
-//         valueX += 60;
-//         }
-//       if (newColor < this.colors.length-1){
-//         newColor++;
-//       }
-//       else {newColor = 0;}
-//       valueX = 40;
-//       valueY += 25;
-//     }
-// };
-
 Levels.prototype.generateLevel1 = function () {
-  this.level3 = [];
-  valueX = 40;
+  this.level1 = [];
+  valueX = 80;
   valueY = 40;
-  for(var i = 0; i < 4; i++) {                          //rows
-      for(var j = 0; j < 12; j++){                    //columns
+  var newColor = 0;
+  for(var i = 0; i < 7; i++) {
+      for(var j = 0; j < 12; j++){
         var newBrick = new Brick({
-          color: this.colors[i],
-          colorShadow: this.shadows[i],
-          colorLight: this.lights[i],
+          color: this.colors[newColor],
+          colorShadow: this.shadows[newColor],
+          colorLight: this.lights[newColor],
           width:50,
           height:20,
           x:valueX,
-          y:valueY,
-          type:'normal',
+          y:valueY
         });
-         this.level1.push(newBrick);
-         valueX += 60;
+        this.level1.push(newBrick);
+        valueX += 54;
         }
-      valueX = 40;
-      valueY += 25;
+      if (newColor < this.colors.length-1){
+        newColor++;
+      }
+      else {newColor = 0;}
+      valueX = 80;
+      valueY += 21;
     }
-      unbvalueX = 0;
-      for(var unbj = 0; unbj < 13; unbj++){
-          var unbnewBrick = new Brick({
-            color: '#878787',
-            colorShadow: '#6d6d6d',
-            colorLight: '#d6d6d6',
-            width:50,
-            height:20,
-            x:unbvalueX,
-            y:230,
-            type:'unb',
-          });
-           this.level1.push(unbnewBrick);
-           unbvalueX += 54;
-           if (unbvalueX == 270) {unbvalueX = 530;}
-          }
 };
 
 Levels.prototype.generateLevel2 = function () {
   this.level2 = [];
-  valueX = 40;
+  valueX = 80;
   valueY = 40;
   for(var i = 0; i < 12; i++) { //filas
       var rowLenght = 12;
@@ -108,21 +69,22 @@ Levels.prototype.generateLevel2 = function () {
           type:'normal',
         });
         this.level2.push(newBrick);
-        valueX += 60;
+        valueX += 54;
         }
 
-      valueX = 40;
-      valueY += 25;
+      valueX = 80;
+      valueY += 21;
     }
 };
 
+
 Levels.prototype.generateLevel3 = function () {
   this.level3 = [];
-  valueX = 40;
+  valueX = 80;
   valueY = 40;
   var newColor = 0;
-  for(var i = 0; i < 7; i++) {
-      for(var j = 0; j < 12; j++){
+  for(var i = 0; i < 5; i++) {                          //rows
+      for(var j = 0; j < 12; j++){                    //columns
         var newBrick = new Brick({
           color: this.colors[newColor],
           colorShadow: this.shadows[newColor],
@@ -133,14 +95,125 @@ Levels.prototype.generateLevel3 = function () {
           y:valueY,
           type:'normal',
         });
-        this.level3.push(newBrick);
-        valueX += 60;
+         this.level3.push(newBrick);
+         valueX += 54;
         }
-      if (newColor < this.colors.length-1){
-        newColor++;
-      }
-      else {newColor = 0;}
-      valueX = 40;
-      valueY += 25;
+        if (newColor < this.colors.length-1){
+          newColor++;
+        }
+        else {newColor = 0;}
+        valueX = 80;
+        valueY += 21;
     }
+      unbvalueX = 0;
+      for(var unbj = 0; unbj < 13; unbj++){
+          var unbnewBrick = new Brick({
+            color: '#878787',
+            colorShadow: '#6d6d6d',
+            colorLight: '#d6d6d6',
+            width:50,
+            height:20,
+            x:unbvalueX,
+            y:230,
+            type:'unb',
+          });
+           this.level3.push(unbnewBrick);
+           unbvalueX += 54;
+           if (unbvalueX == 270) {unbvalueX = 530;}
+          }
+};
+Levels.prototype.generateLevel4 = function () {
+  this.level4 = [];
+  valueX = 197;
+  valueY = 120;
+  var newColor = 0;
+  for(var i = 0; i < 7; i++) {                          //rows
+      for(var j = 0; j < 8; j++){                    //columns
+        var newBrick = new Brick({
+          color: this.colors[newColor],
+          colorShadow: this.shadows[newColor],
+          colorLight: this.lights[newColor],
+          width:50,
+          height:20,
+          x:valueX,
+          y:valueY,
+          type:'normal',
+        });
+         this.level4.push(newBrick);
+         valueX += 54;
+        }
+        if (newColor < this.colors.length-1){
+          newColor++;
+        }
+        else {newColor = 0;}
+        valueX = 197;
+        valueY += 21;
+    }
+    //fila de abajo del unb
+      unbvalueX = 116;
+      for(var unbj = 0; unbj < 11; unbj++){
+          var unbnewBrick = new Brick({
+            color: '#878787',
+            colorShadow: '#6d6d6d',
+            colorLight: '#d6d6d6',
+            width:50,
+            height:20,
+            x:unbvalueX,
+            y:290,
+            type:'unb',
+          });
+           this.level4.push(unbnewBrick);
+           unbvalueX += 54;
+      }
+      //fila de arriba del unb
+      unbvalueX = 116;
+      for(var unbj = 0; unbj < 8; unbj++){
+          var unbnewBrick = new Brick({
+            color: '#878787',
+            colorShadow: '#6d6d6d',
+            colorLight: '#d6d6d6',
+            width:50,
+            height:20,
+            x:unbvalueX,
+            y:61,
+            type:'unb',
+          });
+           this.level4.push(unbnewBrick);
+           unbvalueX += 54;
+           if (unbvalueX == 332) {unbvalueX = 494;}
+      }
+      //fila laterla izq del unb
+      unbvalueX = 116;
+      unbvalueY = 269;
+      for(var unbj = 0; unbj < 10; unbj++){
+          var unbnewBrick = new Brick({
+            color: '#878787',
+            colorShadow: '#6d6d6d',
+            colorLight: '#d6d6d6',
+            width:50,
+            height:20,
+            x:unbvalueX,
+            y:unbvalueY,
+            type:'unb',
+          });
+           this.level4.push(unbnewBrick);
+           unbvalueY -= 21;
+      }
+      //fila laterla der del unb
+      unbvalueX = 656;
+      unbvalueY = 269;
+      for(var unbj = 0; unbj < 10; unbj++){
+          var unbnewBrick = new Brick({
+            color: '#878787',
+            colorShadow: '#6d6d6d',
+            colorLight: '#d6d6d6',
+            width:50,
+            height:20,
+            x:unbvalueX,
+            y:unbvalueY,
+            type:'unb',
+          });
+           this.level4.push(unbnewBrick);
+           unbvalueY -= 21;
+      }
 };
