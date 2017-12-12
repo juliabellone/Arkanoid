@@ -15,8 +15,6 @@ function Bar (canvasWidth, canvasHeight) {
   this.direction = null; //se puede usar para botar diferente segun la direccion de la barra y la tecla pulsada
 }
 
-
-
 //barra choca contra las paredes
 Bar.prototype._barLimits = function () {
   if (this.x < 0 ) {

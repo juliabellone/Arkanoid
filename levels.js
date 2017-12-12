@@ -36,7 +36,8 @@ Levels.prototype.generateLevel1 = function () {
           width:50,
           height:20,
           x:valueX,
-          y:valueY
+          y:valueY,
+          type:'normal',
         });
         this.level1.push(newBrick);
         valueX += 54;

@@ -10,7 +10,7 @@ $(document).ready(function(){
     color: '#ededed',
     brickRows: 6,
     brickColumns: 5,
-    bricksArray: [],
+    bricksArray: null,
     ball: new Ball(canvas.width, canvas.height),
     bar: new Bar(canvas.width, canvas.height),
     ctx: ctx,

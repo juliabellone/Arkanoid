@@ -19,7 +19,6 @@ function Game(options) {
 //---------------START AND UPDATE FUNCTIONS---------------//
 
 Game.prototype.start = function () {
-  //console.log(this.bricksArray);
   this._assignLevel();
   this._assignControlKeys();
   this._drawBoard();
@@ -32,6 +31,8 @@ Game.prototype.start = function () {
 };
 
 Game.prototype._update = function () {
+  // console.log(this.bricksArray);
+  // console.log(this._checkIfWin());
   //  console.log(this.level);
   //  console.log(this.status);
 
@@ -64,21 +65,25 @@ Game.prototype._update = function () {
     }
     this.ball.vy = - this.ball.vy;
   }
+  this.bricksCollision();
 
-  if(this.bricksCollision(this.bricksArray, this.ball)) {
-    this.ball.vy = - this.ball.vy;
-  }
-  //COMENTADO TEMPORAL PARA PROBAR LOS NIVELES, DEJAR COMO  ANTES
-  //checks if there is any normal bricks left
-  // if (!this._checkIfWin()) {
-  //   this.status = 'win';
-  //   this._win();
+  // if(this.bricksCollision(this.bricksArray, this.ball)) {
+  //   this.ball.vy = - this.ball.vy;
   // }
+  //checks if there is any normal bricks left
+  if (!this._checkIfWin()) {
+    this.status = 'win';
+    this._win();
+  }
 
   this._assignControlKeys();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 
+Game.prototype._updateBall = function () {
+  this._drawBall();
+  this.intervalGame = window.requestAnimationFrame(this._updateBall.bind(this));
+};
 //---------------MAIN GAME FUNCTIONS---------------//
 
 Game.prototype._launchStatus = function () {
@@ -97,8 +102,8 @@ Game.prototype._launchStatus = function () {
 Game.prototype._launchBall = function () {
   //lanza la pelota hacia arriba y cambia el estado de la partida
   this.status = 'playing';
-  this.ball.vx = -5;
-  this.ball.vy = -5;
+  this.ball.vx = -3;
+  this.ball.vy = -2.8;
 };
 
 Game.prototype._pause = function () {
@@ -142,11 +147,11 @@ Game.prototype._assignLevel = function () {
     break;
    }
 };
-// Game.prototype._checkIfWin = function () {
-//   return this.bricksArray.some(function (brick) {
-//   return brick.type == 'normal';
-//   });
-// };
+Game.prototype._checkIfWin = function () {
+  return this.bricksArray.some(function (brick) {
+  return brick.type == 'normal';
+  });
+};
 
 Game.prototype.bricksCollision = function () {
   var ballX = this.ball.x;
@@ -159,24 +164,25 @@ Game.prototype.bricksCollision = function () {
     var brickHeight = brick.height;
     var distX = Math.abs(ballX - brickX - brickWidth/2);
     var distY = Math.abs(ballY - brickY - brickHeight/2);
-
         if (distX > (brickWidth / 2 + ballRadius)) {
             return false;
         }
         if (distY > (brickHeight / 2 + ballRadius)) {
             return false;
         }
+        //toque arriba o abajo del ladrillo (ejeY)
         if (distX <= (brickWidth / 2)) {
-            // brick.height = 0;
-            // brick.width = 0;
+          console.log('arrr/aba');
+            this.ball.vy = - this.ball.vy;
             if(brick.type != 'unb'){
               array.splice(index, 1);
             }
             return true;
         }
+        //toque a izquierda o derecha del ladrillo (eje X)
         if (distY <= (brickHeight / 2)) {
-            // brick.height = 0;
-            // brick.width = 0;
+          console.log('izq/der');
+            this.ball.vx =- this.ball.vx;
             if(brick.type != 'unb'){
               array.splice(index, 1);
             }
@@ -185,6 +191,9 @@ Game.prototype.bricksCollision = function () {
         var dx = distX - brickWidth / 2;
         var dy = distY -brickHeight / 2;
         if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
+          console.log('diagonal');
+          this.ball.vy = - this.ball.vy;
+          this.ball.vx = - this.ball.vx;
           if(brick.type != 'unb'){
             array.splice(index, 1);
           }

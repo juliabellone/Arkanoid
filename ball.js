@@ -8,8 +8,8 @@ function Ball (canvasWidth, canvasHeight) {
   this.mediumColor2 = '#a8a8a8';
   this.lightColor ='#d6d6d6';
   this.shadowColor ='#6d6d6d';
-  this.vx = 0;
-  this.vy = 0;
+  this.vx = 1;
+  this.vy = 1;
   this.status = null;
 }
 
