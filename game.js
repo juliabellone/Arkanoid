@@ -19,7 +19,7 @@ function Game(options) {
 //---------------START AND UPDATE FUNCTIONS---------------//
 
 Game.prototype.start = function () {
-  console.log(this.bricksArray);
+  //console.log(this.bricksArray);
   this._assignLevel();
   this._assignControlKeys();
   this._drawBoard();
@@ -32,8 +32,8 @@ Game.prototype.start = function () {
 };
 
 Game.prototype._update = function () {
-   console.log(this.level);
-   console.log(this.status);
+  //  console.log(this.level);
+  //  console.log(this.status);
 
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
@@ -221,8 +221,15 @@ Game.prototype._drawBall = function () {
 };
 
 Game.prototype._drawBar = function () {
-  this.ctx.fillStyle = this.bar.color;
+  this.ctx.fillStyle = this.bar.shadowColor;
   this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
+  this.ctx.fillStyle = this.bar.mediumColor1;
+  this.ctx.fillRect(this.bar.x, this.bar.y+2.4, this.bar.width, this.bar.height/1.5);
+  this.ctx.fillStyle = this.bar.mediumColor2;
+  this.ctx.fillRect(this.bar.x, this.bar.y+4, this.bar.width, this.bar.height/2.2);
+  this.ctx.fillStyle = this.bar.lightColor;
+  this.ctx.fillRect(this.bar.x, this.bar.y+5.4, this.bar.width, this.bar.height/4);
+
 };
 
 Game.prototype._drawBricks = function () {
@@ -263,8 +270,8 @@ Game.prototype._assignControlKeys = function () {
     if(e.keyCode == 37 || e.keyCode == 39) {
       this.bar.vx = 0;
     }
-    //Tecla trampa para pasar de nivel con enter
-    if (e.keyCode == 13) {
+    //Tecla trampa para pasar de nivel con L
+    if (e.keyCode == 76) {
       this.status = 'win';
       this._win();
     }

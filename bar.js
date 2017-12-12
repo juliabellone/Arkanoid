@@ -1,7 +1,11 @@
 function Bar (canvasWidth, canvasHeight) {
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
-  this.color = 'black';
+  this.lightColor ='#d6d6d6';
+  this.mediumColor1 = '#878787';
+  this.mediumColor2 = '#a8a8a8';
+  this.shadowColor ='#6d6d6d';
+  this.radius = 8;
   this.width = 125;
   this.height = 15;
   this.x = this.canvasWidth/2 - this.width/2;
@@ -9,9 +13,6 @@ function Bar (canvasWidth, canvasHeight) {
   this.vx = 0;
   this.maxSpeed = 20;
   this.direction = null; //se puede usar para botar diferente segun la direccion de la barra y la tecla pulsada
-  this.algo = function () {
-    
-  }
 }
 
 
