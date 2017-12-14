@@ -11,7 +11,7 @@ function Bar (canvasWidth, canvasHeight) {
   this.x = this.canvasWidth/2 - this.width/2;
   this.y = this.canvasHeight - this.height;
   this.vx = 0;
-  this.maxSpeed = 20;
+  this.maxSpeed = 10;
   this.direction = null; //se puede usar para botar diferente segun la direccion de la barra y la tecla pulsada
 }
 

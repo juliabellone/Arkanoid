@@ -14,6 +14,8 @@ function Game(options) {
   this.status = options.status;
   this.level = options.level;
   this.levels = options.levels;
+  this.price = options.price;
+  this.pricesArray = options.pricesArray;
 }
 
 //---------------START AND UPDATE FUNCTIONS---------------//
@@ -31,11 +33,11 @@ Game.prototype.start = function () {
 };
 
 Game.prototype._update = function () {
+
   // console.log(this.bricksArray);
   // console.log(this._checkIfWin());
   //  console.log(this.level);
   //  console.log(this.status);
-  this.ball.maxMinSpeed();
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
@@ -44,6 +46,7 @@ Game.prototype._update = function () {
   this._drawBall();
   this._drawBar();
   this._drawBricks();
+  this._drawPrices();
   this.ball.bounce();
   if(this.ball.hitBottom()) {
     this.status = 'gameOver';
@@ -51,19 +54,6 @@ Game.prototype._update = function () {
 
   //bounce with Bar
   if(this._barBounce(this.bar).value){
-    //
-    // var ballX = this.ball.barBounce(this.bar).ballX;
-    // var barX = this.ball.barBounce(this.bar).barX;
-    // //pelota rebota en el lado izquierdo de la pala
-    // if(this.ball.vx > 0 && ballX < barX + this.bar.width*0.3) {
-    //   this.ball.vx = - this.ball.vx;
-    //   //console.log("izquierda");
-    // }
-    // //pelota rebota en el lado derecho de la pala
-    // if(this.ball.vx < 0 && ballX > barX + this.bar.width*0.7) {
-    //   this.ball.vx = - this.ball.vx;
-    //   //console.log("derecha");
-    // }
     var ballX = this.ball.x;
     var barX = this.bar.x;
     var barX1 = this.bar.x + (this.bar.width/5);
@@ -72,7 +62,7 @@ Game.prototype._update = function () {
     var barX4 = this.bar.x + (this.bar.width/5)*4;
 
     if (ballX > barX && ballX < barX1) {
-      console.log(0, "velocidadX =" +this.ball.vx);
+      //console.log(0, "velocidadX =" +this.ball.vx);
       if (this.ball.vx > 0) {
         this.ball.vx = -this.ball.vx;
       } else {
@@ -80,15 +70,15 @@ Game.prototype._update = function () {
       }
     }
     if (ballX > barX1 && ballX < barX2) {
-      console.log(1, "velocidadX ="+ this.ball.vx);
+      //console.log(1, "velocidadX ="+ this.ball.vx);
       this.ball.vx = this.ball.vx*0.7;
     }
     if (ballX > barX2 && ballX < barX3) {
-      console.log(2, "velocidadX ="+ this.ball.vx);
+      //console.log(2, "velocidadX ="+ this.ball.vx);
       this.ball.vx = this.ball.vx*0.3;
     }
     if (ballX > barX3 && ballX < barX4) {
-      console.log(3, "velocidadX ="+ this.ball.vx);
+      //console.log(3, "velocidadX ="+ this.ball.vx);
       this.ball.vx = this.ball.vx*0.7;
     }
     if (ballX > barX4) {
@@ -97,18 +87,21 @@ Game.prototype._update = function () {
       } else {
         this.ball.vx = this.ball.vx*1.6;
       }
-      console.log(4, "velocidadX ="+ this.ball.vx);
+      //console.log(4, "velocidadX ="+ this.ball.vx);
     }
     this.ball.vy = - this.ball.vy;
   }
-
+  this.ball.maxMinSpeed();
   this.bricksCollision();
 
   if (!this._checkIfWin()) {
     this.status = 'win';
     this._win();
   }
-
+  console.log(this.pricesArray);
+  //functions of the prices
+  this.pricesDownMotion();
+  this._deletePrice();
   this._assignControlKeys();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
@@ -233,6 +226,7 @@ Game.prototype.bricksCollision = function () {
             this.ball.vy = - this.ball.vy;
             if(brick.type != 'unb'){
               array.splice(index, 1);
+              this._newPrice(brick.x, brick.y);
             }
             return true;
         }
@@ -242,6 +236,7 @@ Game.prototype.bricksCollision = function () {
             this.ball.vx =- this.ball.vx;
             if(brick.type != 'unb'){
               array.splice(index, 1);
+              this._newPrice(brick.x, brick.y);
             }
             return true;
         }
@@ -258,6 +253,42 @@ Game.prototype.bricksCollision = function () {
         // return (dx * dx + dy * dy <= (ballRadius*ballRadius));
 
   }.bind(this));
+  };
+
+  Game.prototype._newPrice = function (brickX, brickY) {
+    var random = Math.floor(Math.random() * 10);
+    console.log(random);
+    if (random == 8) {
+    console.log('NUEVO PREMIO');
+    var price = new Price(brickX, brickY);
+    this.pricesArray.push(price);
+    console.log(this.pricesArray);
+    }
+  };
+
+  Game.prototype.pricesDownMotion = function () {
+    if (this.pricesArray.length> 0 ) {
+      for (i = 0; i < this.pricesArray.length; i++) {
+          this.pricesArray[i].y += this.pricesArray[i].vy;
+      }
+    }
+  };
+  // Game.prototype._deletePrice = function() {
+  //   this.pricesArray.forEach(function (brick, index, array) {
+  //     if (brick.y > this.canvasHeight) {
+  //       array.splice(index,1);
+  //     }
+  //   });
+  // };
+  Game.prototype._deletePrice = function() {
+    if (this.pricesArray.length> 0 ) {
+      for (i = 0; i < this.pricesArray.length; i++) {
+          if(this.pricesArray[i].y > this.canvasHeight) {
+            this.pricesArray.splice(i);
+            console.log ('BORRADO')
+          }
+      }
+    }
   };
 
 //---------------DRAWING FUNCTIONS---------------//
@@ -315,6 +346,12 @@ Game.prototype._drawBricks = function () {
     this.bricksArray[i].width,
     effect);
     this.ctx.fillRect((this.bricksArray[i].x+this.bricksArray[i].width), this.bricksArray[i].y,effect,this.bricksArray[i].height);
+  }
+};
+Game.prototype._drawPrices = function () {
+  for (i=0; i<this.pricesArray.length; i++){
+    this.ctx.fillStyle = this.pricesArray[i].color;
+    this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
   }
 };
 

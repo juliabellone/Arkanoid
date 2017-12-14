@@ -18,6 +18,8 @@ $(document).ready(function(){
     status: null,
     levels: new Levels(canvas.width, canvas.height),
     level: 1,
+    price: new Price(),
+    pricesArray : [],
   });
   game.start();
 
