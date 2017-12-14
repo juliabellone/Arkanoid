@@ -50,27 +50,47 @@ Game.prototype._update = function () {
   }
 
   //bounce with Bar
-  if(this.ball.barBounce(this.bar).value){
-    var ballX = this.ball.barBounce(this.bar).ballX;
-    var barX = this.ball.barBounce(this.bar).barX;
-    //pelota rebota en el lado izquierdo de la pala
-    if(this.ball.vx > 0 && ballX < barX + this.bar.width*0.3) {
-      this.ball.vx = - this.ball.vx;
-      //console.log("izquierda");
+  if(this._barBounce(this.bar).value){
+    //
+    // var ballX = this.ball.barBounce(this.bar).ballX;
+    // var barX = this.ball.barBounce(this.bar).barX;
+    // //pelota rebota en el lado izquierdo de la pala
+    // if(this.ball.vx > 0 && ballX < barX + this.bar.width*0.3) {
+    //   this.ball.vx = - this.ball.vx;
+    //   //console.log("izquierda");
+    // }
+    // //pelota rebota en el lado derecho de la pala
+    // if(this.ball.vx < 0 && ballX > barX + this.bar.width*0.7) {
+    //   this.ball.vx = - this.ball.vx;
+    //   //console.log("derecha");
+    // }
+    var ballX = this.ball.x;
+    var barX = this.bar.x;
+    var barX1 = this.bar.x + (this.bar.width/5);
+    var barX2 = this.bar.x + (this.bar.width/5)*2;
+    var barX3 = this.bar.x + (this.bar.width/5)*3;
+    var barX4 = this.bar.x + (this.bar.width/5)*4;
+
+    if (ballX > barX && ballX < barX1) {
+      console.log(0);
     }
-    //pelota rebota en el lado derecho de la pala
-    if(this.ball.vx < 0 && ballX > barX + this.bar.width*0.7) {
-      this.ball.vx = - this.ball.vx;
-      //console.log("derecha");
+    if (ballX > barX1 && ballX < barX2) {
+      console.log(1);
+    }
+    if (ballX > barX2 && ballX < barX3) {
+      console.log(2);
+    }
+    if (ballX > barX3 && ballX < barX4) {
+      console.log(3);
+    }
+    if (ballX > barX4) {
+      console.log(4);
     }
     this.ball.vy = - this.ball.vy;
   }
+
   this.bricksCollision();
 
-  // if(this.bricksCollision(this.bricksArray, this.ball)) {
-  //   this.ball.vy = - this.ball.vy;
-  // }
-  //checks if there is any normal bricks left
   if (!this._checkIfWin()) {
     this.status = 'win';
     this._win();
@@ -102,8 +122,8 @@ Game.prototype._launchStatus = function () {
 Game.prototype._launchBall = function () {
   //lanza la pelota hacia arriba y cambia el estado de la partida
   this.status = 'playing';
-  this.ball.vx = -3;
-  this.ball.vy = -2.8;
+  this.ball.vx = -4;
+  this.ball.vy = -6;
 };
 
 Game.prototype._pause = function () {
@@ -153,6 +173,34 @@ Game.prototype._checkIfWin = function () {
   });
 };
 
+Game.prototype._barBounce = function () {
+
+  var ballX = this.ball.x;
+  var ballY = this.ball.y;
+  var ballRadius = this.ball.radius;
+  var barX = this.bar.x;
+  var barY = this.bar.y;
+  var barWidth = this.bar.width;
+  var barHeight = this.bar.height;
+
+      var distX = Math.abs(ballX - barX - barWidth / 2);
+      var distY = Math.abs(ballY - barY - barHeight / 2);
+
+      if (distX > (barWidth / 2 + ballRadius)) {
+          return {value: false, ballX: ballX, barX: barX};
+      }
+      if (distY > (barHeight / 2 + ballRadius)) {
+          return {value: false, ballX: ballX, barX: barX};
+      }
+      if (distX <= (barWidth / 2)) {
+          return {value: true, ballX: ballX, barX: barX};
+      }
+      if (distY <= (barHeight / 2)) {
+          return {value: true, ballX: ballX, barX: barX};
+      }
+      else {return {value: true, ballX: ballX, barX: barX};}
+};
+
 Game.prototype.bricksCollision = function () {
   var ballX = this.ball.x;
   var ballY = this.ball.y;
@@ -172,7 +220,7 @@ Game.prototype.bricksCollision = function () {
         }
         //toque arriba o abajo del ladrillo (ejeY)
         if (distX <= (brickWidth / 2)) {
-          console.log('arrr/aba');
+          //console.log('arrr/aba');
             this.ball.vy = - this.ball.vy;
             if(brick.type != 'unb'){
               array.splice(index, 1);
@@ -181,24 +229,24 @@ Game.prototype.bricksCollision = function () {
         }
         //toque a izquierda o derecha del ladrillo (eje X)
         if (distY <= (brickHeight / 2)) {
-          console.log('izq/der');
+          //console.log('izq/der');
             this.ball.vx =- this.ball.vx;
             if(brick.type != 'unb'){
               array.splice(index, 1);
             }
             return true;
         }
-        var dx = distX - brickWidth / 2;
-        var dy = distY -brickHeight / 2;
-        if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
-          console.log('diagonal');
-          this.ball.vy = - this.ball.vy;
-          this.ball.vx = - this.ball.vx;
-          if(brick.type != 'unb'){
-            array.splice(index, 1);
-          }
-        }
-        return (dx * dx + dy * dy <= (ballRadius*ballRadius));
+        // var dx = distX - brickWidth / 2;
+        // var dy = distY -brickHeight / 2;
+        // if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
+        //   console.log('diagonal');
+        //   // this.ball.vy = - this.ball.vy;
+        //   this.ball.vx = - this.ball.vx;
+        //   if(brick.type != 'unb'){
+        //     array.splice(index, 1);
+        //   }
+        // }
+        // return (dx * dx + dy * dy <= (ballRadius*ballRadius));
 
   }.bind(this));
   };
