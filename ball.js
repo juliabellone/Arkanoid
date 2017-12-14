@@ -13,6 +13,7 @@ function Ball (canvasWidth, canvasHeight) {
   this.status = null;
 }
 
+
 Ball.prototype.bounce = function () {
   //acceleration of the ball
   this.x += this.vx;
@@ -31,5 +32,20 @@ Ball.prototype.hitBottom = function () {
     this.vx = 0;
     this.vy = 0;
     return true;
+  }
+};
+
+Ball.prototype.maxMinSpeed = function () {
+  if (this.vx > 0 && this.vx > 9) {
+    this.vx = 9;
+  }
+  if (this.vx > 0 && this.vx < 4) {
+    this.vx = 4;
+  }
+  if (this.vx < 0 && this.vx < -9) {
+    this.vx = -9;
+  }
+  if (this.vx < 0 && this.vx > -4) {
+    this.vx = -4;
   }
 };

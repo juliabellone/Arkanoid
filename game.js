@@ -35,7 +35,7 @@ Game.prototype._update = function () {
   // console.log(this._checkIfWin());
   //  console.log(this.level);
   //  console.log(this.status);
-
+  this.ball.maxMinSpeed();
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
@@ -72,19 +72,32 @@ Game.prototype._update = function () {
     var barX4 = this.bar.x + (this.bar.width/5)*4;
 
     if (ballX > barX && ballX < barX1) {
-      console.log(0);
+      console.log(0, "velocidadX =" +this.ball.vx);
+      if (this.ball.vx > 0) {
+        this.ball.vx = -this.ball.vx;
+      } else {
+        this.ball.vx = this.ball.vx*1.6;
+      }
     }
     if (ballX > barX1 && ballX < barX2) {
-      console.log(1);
+      console.log(1, "velocidadX ="+ this.ball.vx);
+      this.ball.vx = this.ball.vx*0.7;
     }
     if (ballX > barX2 && ballX < barX3) {
-      console.log(2);
+      console.log(2, "velocidadX ="+ this.ball.vx);
+      this.ball.vx = this.ball.vx*0.3;
     }
     if (ballX > barX3 && ballX < barX4) {
-      console.log(3);
+      console.log(3, "velocidadX ="+ this.ball.vx);
+      this.ball.vx = this.ball.vx*0.7;
     }
     if (ballX > barX4) {
-      console.log(4);
+      if (this.ball.vx < 0) {
+        this.ball.vx = -this.ball.vx;
+      } else {
+        this.ball.vx = this.ball.vx*1.6;
+      }
+      console.log(4, "velocidadX ="+ this.ball.vx);
     }
     this.ball.vy = - this.ball.vy;
   }
@@ -100,10 +113,6 @@ Game.prototype._update = function () {
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 
-Game.prototype._updateBall = function () {
-  this._drawBall();
-  this.intervalGame = window.requestAnimationFrame(this._updateBall.bind(this));
-};
 //---------------MAIN GAME FUNCTIONS---------------//
 
 Game.prototype._launchStatus = function () {
