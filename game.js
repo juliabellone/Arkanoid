@@ -35,8 +35,8 @@ Game.prototype.start = function () {
 };
 
 Game.prototype._update = function () {
-console.log(this.pricesArray);
-  //console.log(this.ballsArray);
+  //console.log(this.pricesArray);
+  console.log(this.ballsArray);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
@@ -46,47 +46,52 @@ console.log(this.pricesArray);
   this._drawBar();
   this._drawBricks();
   this._drawPrices();
-  this.ball.bounce();
-  if(this.ball.hitBottom()) {
+  this._bounce();
+  if(this._hitBottom()) {
     this.status = 'gameOver';
   }
 
   //bounce with Bar
-  if(this._barBounce(this.bar).value){
-    var ballX = this.ball.x;
-    var barX = this.bar.x;
-    var barX1 = this.bar.x + (this.bar.width/5);
-    var barX2 = this.bar.x + (this.bar.width/5)*2;
-    var barX3 = this.bar.x + (this.bar.width/5)*3;
-    var barX4 = this.bar.x + (this.bar.width/5)*4;
+  this._barBounce();
 
-    if (ballX > barX && ballX < barX1) {
-      if (this.ball.vx > 0) {
-        this.ball.vx = -this.ball.vx;
-      } else {
-        this.ball.vx = this.ball.vx*1.6;
-      }
-    }
-    if (ballX > barX1 && ballX < barX2) {
-      this.ball.vx = this.ball.vx*0.7;
-    }
-    if (ballX > barX2 && ballX < barX3) {
-      this.ball.vx = this.ball.vx*0.3;
-    }
-    if (ballX > barX3 && ballX < barX4) {
-      this.ball.vx = this.ball.vx*0.7;
-    }
-    if (ballX > barX4) {
-      if (this.ball.vx < 0) {
-        this.ball.vx = -this.ball.vx;
-      } else {
-        this.ball.vx = this.ball.vx*1.6;
-      }
-    }
-    this.ball.vy = - this.ball.vy;
-  }
-  this.ball.maxMinSpeed();
-  this.bricksCollision();
+  // if(this._barBounce(this.bar).value){
+  //   this.ballsArray.forEach(function (ball) {
+  //     var ballX = ball.x;
+  //     var barX = this.bar.x;
+  //     var barX1 = this.bar.x + (this.bar.width/5);
+  //     var barX2 = this.bar.x + (this.bar.width/5)*2;
+  //     var barX3 = this.bar.x + (this.bar.width/5)*3;
+  //     var barX4 = this.bar.x + (this.bar.width/5)*4;
+  //
+  //     if (ballX > barX && ballX < barX1) {
+  //       if (ball.vx > 0) {
+  //         ball.vx = -ball.vx;
+  //       } else {
+  //         ball.vx = ball.vx*1.6;
+  //       }
+  //     }
+  //     if (ballX > barX1 && ballX < barX2) {
+  //       ball.vx = ball.vx*0.7;
+  //     }
+  //     if (ballX > barX2 && ballX < barX3) {
+  //       ball.vx = ball.vx*0.3;
+  //     }
+  //     if (ballX > barX3 && ballX < barX4) {
+  //       ball.vx = ball.vx*0.7;
+  //     }
+  //     if (ballX > barX4) {
+  //       if (ball.vx < 0) {
+  //         ball.vx = -ball.vx;
+  //       } else {
+  //         ball.vx = ball.vx*1.6;
+  //       }
+  //     }
+  //     ball.vy = - ball.vy;
+  //   }.bind(this));
+  // }
+
+  this._maxMinSpeed();
+  this._bricksCollision();
 
   if (!this._checkIfWin()) {
     this.status = 'win';
@@ -101,6 +106,7 @@ console.log(this.pricesArray);
 };
 
 //---------------MAIN GAME FUNCTIONS---------------//
+
 
 Game.prototype._launchStatus = function () {
   //establece la barra en el centro
@@ -118,8 +124,8 @@ Game.prototype._launchStatus = function () {
 Game.prototype._launchBall = function () {
   //lanza la pelota hacia arriba y cambia el estado de la partida
   this.status = 'playing';
-  this.ball.vx = -4;
-  this.ball.vy = -6;
+  this.ball.vx = -3;
+  this.ball.vy = -5;
 };
 
 Game.prototype._pause = function () {
@@ -168,81 +174,174 @@ Game.prototype._checkIfWin = function () {
   });
 };
 
-Game.prototype._barBounce = function () {
+//---------------BALL FUNCTIONS---------------//
 
-  var ballX = this.ball.x;
-  var ballY = this.ball.y;
-  var ballRadius = this.ball.radius;
-  var barX = this.bar.x;
-  var barY = this.bar.y;
-  var barWidth = this.bar.width;
-  var barHeight = this.bar.height;
-
-      var distX = Math.abs(ballX - barX - barWidth / 2);
-      var distY = Math.abs(ballY - barY - barHeight / 2);
-
-      if (distX > (barWidth / 2 + ballRadius)) {
-          return {value: false, ballX: ballX, barX: barX};
-      }
-      if (distY > (barHeight / 2 + ballRadius)) {
-          return {value: false, ballX: ballX, barX: barX};
-      }
-      if (distX <= (barWidth / 2)) {
-          return {value: true, ballX: ballX, barX: barX};
-      }
-      if (distY <= (barHeight / 2)) {
-          return {value: true, ballX: ballX, barX: barX};
-      }
-      else {return {value: true, ballX: ballX, barX: barX};}
+//Defines balls speed and bounce against walls
+Game.prototype._bounce = function () {
+  this.ballsArray.forEach(function (ball) {
+    //acceleration of the ball
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+    //bounce of the ball
+    if (ball.y + ball.vy < ball.radius) {
+      ball.vy = -ball.vy;
+    }
+    if (ball.x + ball.vx > this.canvasWidth - ball.radius || ball.x + ball.vx < ball.radius) {
+      ball.vx = -ball.vx;
+    }
+  }.bind(this));
 };
 
-Game.prototype.bricksCollision = function () {
-  var ballX = this.ball.x;
-  var ballY = this.ball.y;
-  var ballRadius = this.ball.radius;
-  return this.bricksArray.some(function(brick, index, array) {
-    var brickX = brick.x;
-    var brickY = brick.y;
-    var brickWidth = brick.width;
-    var brickHeight = brick.height;
-    var distX = Math.abs(ballX - brickX - brickWidth/2);
-    var distY = Math.abs(ballY - brickY - brickHeight/2);
-        if (distX > (brickWidth / 2 + ballRadius)) {
-            return false;
-        }
-        if (distY > (brickHeight / 2 + ballRadius)) {
-            return false;
-        }
-        //toque arriba o abajo del ladrillo (ejeY)
-        if (distX <= (brickWidth / 2)) {
-            this.ball.vy = - this.ball.vy;
-            if(brick.type != 'unb'){
-              array.splice(index, 1);
-              this._newPrice(brick.x, brick.y);
-            }
-            return true;
-        }
-        //toque a izquierda o derecha del ladrillo (eje X)
-        if (distY <= (brickHeight / 2)) {
-            this.ball.vx =- this.ball.vx;
-            if(brick.type != 'unb'){
-              array.splice(index, 1);
-              this._newPrice(brick.x, brick.y);
-            }
-            return true;
-        }
-        // var dx = distX - brickWidth / 2;
-        // var dy = distY -brickHeight / 2;
-        // if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
-        //   console.log('diagonal');
-        //   // this.ball.vy = - this.ball.vy;
-        //   this.ball.vx = - this.ball.vx;
-        //   if(brick.type != 'unb'){
-        //     array.splice(index, 1);
-        //   }
-        // }
-        // return (dx * dx + dy * dy <= (ballRadius*ballRadius));
+//Deletes a ball from array if it hits bottom. Except if it's the last one.
+Game.prototype._hitBottom = function () {
+  this.ballsArray.forEach(function (ball, index, array) {
+    if (ball.y + ball.vy > this.canvasHeight - ball.radius) {
+      if (array.length == 1) {
+        this.vx = 0;
+        this.vy = 0;
+        return true;
+      }
+      if (array.length > 1) {
+        array.splice(index,1);
+      }
+    }
+  }.bind(this));
+};
 
+//Defines balls max and min speeds
+Game.prototype._maxMinSpeed = function () {
+  this.ballsArray.forEach(function (ball, index, array) {
+    if (ball.vx > 0 && ball.vx > 8) {
+      ball.vx = 8;
+    }
+    if (ball.vx > 0 && ball.vx < 4) {
+      ball.vx = 4;
+    }
+    if (ball.vx < 0 && ball.vx < -8) {
+      ball.vx = -8;
+    }
+    if (ball.vx < 0 && ball.vx > -4) {
+      ball.vx = -4;
+    }
+  }.bind(this));
+};
+
+//Defines bouncing of Bar and Balls
+Game.prototype._barBounce = function () {
+  this.ballsArray.forEach(function (ball) {
+    var ballX = ball.x;
+    var ballY = ball.y;
+    var ballRadius = ball.radius;
+    var barX = this.bar.x;
+    var barY = this.bar.y;
+    var barWidth = this.bar.width;
+    var barHeight = this.bar.height;
+        var distX = Math.abs(ballX - barX - barWidth / 2);
+        var distY = Math.abs(ballY - barY - barHeight / 2);
+        if (distX > (barWidth / 2 + ballRadius)) {
+            return false;
+        }
+        if (distY > (barHeight / 2 + ballRadius)) {
+            return false;
+        }
+        if (distX <= (barWidth / 2)) {
+            this._barBounceEffect(ball);
+            return true;
+        }
+        if (distY <= (barHeight / 2)) {
+            this._barBounceEffect(ball);
+            return true;
+        }
+        else {
+          this._barBounceEffect(ball);
+          return true;
+        }
+  }.bind(this));
+};
+
+Game.prototype._barBounceEffect = function (ball) {
+    var ballX = ball.x;
+    var barX = this.bar.x;
+    var barX1 = this.bar.x + (this.bar.width/5);
+    var barX2 = this.bar.x + (this.bar.width/5)*2;
+    var barX3 = this.bar.x + (this.bar.width/5)*3;
+    var barX4 = this.bar.x + (this.bar.width/5)*4;
+
+    if (ballX > barX && ballX < barX1) {
+      if (ball.vx > 0) {
+        ball.vx = -ball.vx;
+      } else {
+        ball.vx = ball.vx*1.6;
+      }
+    }
+    if (ballX > barX1 && ballX < barX2) {
+      ball.vx = ball.vx*0.7;
+    }
+    if (ballX > barX2 && ballX < barX3) {
+      ball.vx = ball.vx*0.3;
+    }
+    if (ballX > barX3 && ballX < barX4) {
+      ball.vx = ball.vx*0.7;
+    }
+    if (ballX > barX4) {
+      if (ball.vx < 0) {
+        ball.vx = -ball.vx;
+      } else {
+        ball.vx = ball.vx*1.6;
+      }
+    }
+    ball.vy = - ball.vy;
+};
+
+Game.prototype._bricksCollision = function () {
+  this.ballsArray.forEach(function (ball) {
+    var ballX = ball.x;
+    var ballY = ball.y;
+    var ballRadius = ball.radius;
+    return this.bricksArray.some(function(brick, index, array) {
+      var brickX = brick.x;
+      var brickY = brick.y;
+      var brickWidth = brick.width;
+      var brickHeight = brick.height;
+      var distX = Math.abs(ballX - brickX - brickWidth/2);
+      var distY = Math.abs(ballY - brickY - brickHeight/2);
+          if (distX > (brickWidth / 2 + ballRadius)) {
+              return false;
+          }
+          if (distY > (brickHeight / 2 + ballRadius)) {
+              return false;
+          }
+          //toque arriba o abajo del ladrillo (ejeY)
+          if (distX <= (brickWidth / 2)) {
+              ball.vy = - ball.vy;
+              if(brick.type != 'unb'){
+                array.splice(index, 1);
+                this._newPrice(brick.x, brick.y);
+              }
+              return true;
+          }
+          //toque a izquierda o derecha del ladrillo (eje X)
+          if (distY <= (brickHeight / 2)) {
+              ball.vx =- ball.vx;
+              if(brick.type != 'unb'){
+                array.splice(index, 1);
+                this._newPrice(brick.x, brick.y);
+              }
+              return true;
+          }
+          // var dx = distX - brickWidth / 2;
+          // var dy = distY -brickHeight / 2;
+          // if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
+          //   console.log('diagonal');
+          //   // this.ball.vy = - this.ball.vy;
+          //   this.ball.vx = - this.ball.vx;
+          //   if(brick.type != 'unb'){
+          //     array.splice(index, 1);
+          //   }
+          // }
+          // return (dx * dx + dy * dy <= (ballRadius*ballRadius));
+
+    }.bind(this));
   }.bind(this));
   };
 
@@ -352,24 +451,24 @@ Game.prototype._drawBoard = function () {
 };
 
 Game.prototype._drawBall = function () {
-  for (i=0; i<this.ballsArray.length; i++){
-  this.ctx.beginPath();
-  this.ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2, true);
-  this.ctx.fillStyle = this.ball.shadowColor;
-  this.ctx.fill();
-  this.ctx.beginPath();
-  this.ctx.arc(this.ball.x-1, this.ball.y-1, this.ball.radius-2, 0, Math.PI * 2, true);
-  this.ctx.fillStyle = this.ball.mediumColor1;
-  this.ctx.fill();
-  this.ctx.beginPath();
-  this.ctx.arc(this.ball.x-2, this.ball.y-2, this.ball.radius-3, 0, Math.PI * 2, true);
-  this.ctx.fillStyle = this.ball.mediumColor2;
-  this.ctx.fill();
-  this.ctx.beginPath();
-  this.ctx.arc(this.ball.x-4, this.ball.y-4, this.ball.radius-7, 0, Math.PI * 2, true);
-  this.ctx.fillStyle = this.ball.lightColor;
-  this.ctx.fill();
-  }
+  this.ballsArray.forEach(function (ball) {
+    this.ctx.beginPath();
+    this.ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2, true);
+    this.ctx.fillStyle = ball.shadowColor;
+    this.ctx.fill();
+    this.ctx.beginPath();
+    this.ctx.arc(ball.x-1, ball.y-1, ball.radius-2, 0, Math.PI * 2, true);
+    this.ctx.fillStyle = ball.mediumColor1;
+    this.ctx.fill();
+    this.ctx.beginPath();
+    this.ctx.arc(ball.x-2, ball.y-2, ball.radius-3, 0, Math.PI * 2, true);
+    this.ctx.fillStyle = ball.mediumColor2;
+    this.ctx.fill();
+    this.ctx.beginPath();
+    this.ctx.arc(ball.x-4, ball.y-4, ball.radius-7, 0, Math.PI * 2, true);
+    this.ctx.fillStyle = ball.lightColor;
+    this.ctx.fill();
+  }.bind(this));
 };
 
 Game.prototype._drawBar = function () {
