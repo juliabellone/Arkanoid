@@ -98,10 +98,11 @@ Game.prototype._update = function () {
     this.status = 'win';
     this._win();
   }
-  console.log(this.pricesArray);
+  //console.log(this.pricesArray);
   //functions of the prices
   this.pricesDownMotion();
   this._deletePrice();
+  this._priceTouchBar();
   this._assignControlKeys();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
@@ -145,7 +146,7 @@ Game.prototype._win = function () {
   this._drawBall();
   this._drawBar();
   this._drawBricks();
-  console.log(this.bricksArray);
+  //console.log(this.bricksArray);
  }
 };
 
@@ -258,12 +259,17 @@ Game.prototype.bricksCollision = function () {
   Game.prototype._newPrice = function (brickX, brickY) {
     var random = Math.floor(Math.random() * 10);
     console.log(random);
-    if (random == 8) {
-    console.log('NUEVO PREMIO');
-    var price = new Price(brickX, brickY);
-    this.pricesArray.push(price);
-    console.log(this.pricesArray);
-    }
+      if (random == 8) {
+        var random2 = Math.floor(Math.random() * 2);
+        switch (random2) {
+          case 0: var price = new PriceBarLong(brickX, brickY);
+          break;
+          case 1: price = new PriceBarShort(brickX, brickY);
+          break;
+        }
+        this.pricesArray.push(price);
+        console.log(this.pricesArray);
+      }
   };
 
   Game.prototype.pricesDownMotion = function () {
@@ -285,8 +291,31 @@ Game.prototype.bricksCollision = function () {
       for (i = 0; i < this.pricesArray.length; i++) {
           if(this.pricesArray[i].y > this.canvasHeight) {
             this.pricesArray.splice(i);
-            console.log ('BORRADO')
           }
+      }
+    }
+  };
+
+  Game.prototype._priceTouchBar = function () {
+    if (this.pricesArray.length> 0 ) {
+      for (i = 0; i < this.pricesArray.length; i++) {
+        var priceX = this.pricesArray[i].x;
+        var priceBottom = this.pricesArray[i].y + this.pricesArray[i].height;
+        if(priceX > this.bar.x && priceX < this.bar.x+this.bar.width && priceBottom >= this.bar.y) {
+            switch (this.pricesArray[i].type) {
+              case 'barlong':
+              this.bar.width = 200;
+              setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+              break;
+              case 'barshort':
+              this.bar.width = 90;
+              setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+              break;
+
+            }
+            this.pricesArray[i].width = 0;
+
+        }
       }
     }
   };
@@ -352,6 +381,9 @@ Game.prototype._drawPrices = function () {
   for (i=0; i<this.pricesArray.length; i++){
     this.ctx.fillStyle = this.pricesArray[i].color;
     this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
+    this.ctx.fillStyle = 'white';
+    this.ctx.font = "bold 12px Arial";
+    this.ctx.fillText(this.pricesArray[i].text, this.pricesArray[i].x + 5, this.pricesArray[i].y + this.pricesArray[i].height - 5 );
   }
 };
 
