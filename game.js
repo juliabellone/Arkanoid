@@ -16,6 +16,7 @@ function Game(options) {
   this.levels = options.levels;
   this.price = options.price;
   this.pricesArray = options.pricesArray;
+  this.ballsArray = options.ballsArray;
 }
 
 //---------------START AND UPDATE FUNCTIONS---------------//
@@ -29,15 +30,13 @@ Game.prototype.start = function () {
   this._drawBricks();
   this._launchStatus();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
+  this.ballsArray.push(this.ball);
 
 };
 
 Game.prototype._update = function () {
-
-  // console.log(this.bricksArray);
-  // console.log(this._checkIfWin());
-  //  console.log(this.level);
-  //  console.log(this.status);
+console.log(this.pricesArray);
+  //console.log(this.ballsArray);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
@@ -62,7 +61,6 @@ Game.prototype._update = function () {
     var barX4 = this.bar.x + (this.bar.width/5)*4;
 
     if (ballX > barX && ballX < barX1) {
-      //console.log(0, "velocidadX =" +this.ball.vx);
       if (this.ball.vx > 0) {
         this.ball.vx = -this.ball.vx;
       } else {
@@ -70,15 +68,12 @@ Game.prototype._update = function () {
       }
     }
     if (ballX > barX1 && ballX < barX2) {
-      //console.log(1, "velocidadX ="+ this.ball.vx);
       this.ball.vx = this.ball.vx*0.7;
     }
     if (ballX > barX2 && ballX < barX3) {
-      //console.log(2, "velocidadX ="+ this.ball.vx);
       this.ball.vx = this.ball.vx*0.3;
     }
     if (ballX > barX3 && ballX < barX4) {
-      //console.log(3, "velocidadX ="+ this.ball.vx);
       this.ball.vx = this.ball.vx*0.7;
     }
     if (ballX > barX4) {
@@ -87,7 +82,6 @@ Game.prototype._update = function () {
       } else {
         this.ball.vx = this.ball.vx*1.6;
       }
-      //console.log(4, "velocidadX ="+ this.ball.vx);
     }
     this.ball.vy = - this.ball.vy;
   }
@@ -98,7 +92,6 @@ Game.prototype._update = function () {
     this.status = 'win';
     this._win();
   }
-  //console.log(this.pricesArray);
   //functions of the prices
   this.pricesDownMotion();
   this._deletePrice();
@@ -146,7 +139,6 @@ Game.prototype._win = function () {
   this._drawBall();
   this._drawBar();
   this._drawBricks();
-  //console.log(this.bricksArray);
  }
 };
 
@@ -223,7 +215,6 @@ Game.prototype.bricksCollision = function () {
         }
         //toque arriba o abajo del ladrillo (ejeY)
         if (distX <= (brickWidth / 2)) {
-          //console.log('arrr/aba');
             this.ball.vy = - this.ball.vy;
             if(brick.type != 'unb'){
               array.splice(index, 1);
@@ -233,7 +224,6 @@ Game.prototype.bricksCollision = function () {
         }
         //toque a izquierda o derecha del ladrillo (eje X)
         if (distY <= (brickHeight / 2)) {
-          //console.log('izq/der');
             this.ball.vx =- this.ball.vx;
             if(brick.type != 'unb'){
               array.splice(index, 1);
@@ -257,18 +247,20 @@ Game.prototype.bricksCollision = function () {
   };
 
   Game.prototype._newPrice = function (brickX, brickY) {
-    var random = Math.floor(Math.random() * 10);
-    console.log(random);
-      if (random == 8) {
-        var random2 = Math.floor(Math.random() * 2);
+    var random = Math.floor(Math.random() * 3); //0, 1 o 2
+      if (random == 1) {
+        var random2 = Math.floor(Math.random() * 3);
+        //Math.floor(Math.random() * 3);
         switch (random2) {
           case 0: var price = new PriceBarLong(brickX, brickY);
           break;
           case 1: price = new PriceBarShort(brickX, brickY);
           break;
+          case 2: price = new PriceNewBall(brickX, brickY);
+          break;
         }
         this.pricesArray.push(price);
-        console.log(this.pricesArray);
+
       }
   };
 
@@ -279,46 +271,78 @@ Game.prototype.bricksCollision = function () {
       }
     }
   };
+
   // Game.prototype._deletePrice = function() {
-  //   this.pricesArray.forEach(function (brick, index, array) {
-  //     if (brick.y > this.canvasHeight) {
-  //       array.splice(index,1);
+  //   if (this.pricesArray.length> 0 ) {
+  //     for (i = 0; i < this.pricesArray.length; i++) {
+  //         if(this.pricesArray[i].y > this.canvasHeight) {
+  //           this.pricesArray.splice(i);
+  //         }
   //     }
-  //   });
+  //   }
   // };
+
   Game.prototype._deletePrice = function() {
-    if (this.pricesArray.length> 0 ) {
-      for (i = 0; i < this.pricesArray.length; i++) {
-          if(this.pricesArray[i].y > this.canvasHeight) {
-            this.pricesArray.splice(i);
-          }
+    this.pricesArray.forEach(function (price, index, array) {
+      if(price.y > this.canvasHeight) {
+        array.splice(index,1);
       }
-    }
+    }.bind(this));
   };
 
   Game.prototype._priceTouchBar = function () {
-    if (this.pricesArray.length> 0 ) {
-      for (i = 0; i < this.pricesArray.length; i++) {
-        var priceX = this.pricesArray[i].x;
-        var priceBottom = this.pricesArray[i].y + this.pricesArray[i].height;
-        if(priceX > this.bar.x && priceX < this.bar.x+this.bar.width && priceBottom >= this.bar.y) {
-            switch (this.pricesArray[i].type) {
-              case 'barlong':
-              this.bar.width = 200;
-              setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
-              break;
-              case 'barshort':
-              this.bar.width = 90;
-              setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
-              break;
-
-            }
-            this.pricesArray[i].width = 0;
-
+    this.pricesArray.forEach(function (price, index, array) {
+      var priceX = price.x;
+      var priceBottom = price.y + price.height;
+      if (priceX > this.bar.x && priceX < this.bar.x + this.bar.width && priceBottom >= this.bar.y) {
+        switch (price.type) {
+          case 'barlong':
+          clearTimeout(action);
+          this.bar.width = 200;
+          var action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+          break;
+          case 'barshort':
+          clearTimeout(action);
+          this.bar.width = 90;
+          action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+          break;
+          case 'newball':
+          var newBall = new Ball(this.canvasWidth, this.canvasHeight);
+          this.ballsArray.push(newBall);
+          break;
         }
+        array.splice(index,1);
       }
-    }
+    }.bind(this));
   };
+
+  // Game.prototype._priceTouchBar = function () {
+  //   if (this.pricesArray.length> 0 ) {
+  //     for (i = 0; i < this.pricesArray.length; i++) {
+  //       var priceX = this.pricesArray[i].x;
+  //       var priceBottom = this.pricesArray[i].y + this.pricesArray[i].height;
+  //       if(priceX > this.bar.x && priceX < this.bar.x+this.bar.width && priceBottom >= this.bar.y) {
+  //           switch (this.pricesArray[i].type) {
+  //             case 'barlong':
+  //             clearTimeout(action);
+  //             this.bar.width = 200;
+  //             var action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+  //             break;
+  //             case 'barshort':
+  //             clearTimeout(action);
+  //             this.bar.width = 90;
+  //             action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+  //             break;
+  //             case 'newball':
+  //             var newBall = new Ball(this.canvasWidth, this.canvasHeight);
+  //             this.ballsArray.push(newBall);
+  //             break;
+  //           }
+  //           this.pricesArray[i].width = 0;
+  //       }
+  //     }
+  //   }
+  // };
 
 //---------------DRAWING FUNCTIONS---------------//
 
@@ -328,6 +352,7 @@ Game.prototype._drawBoard = function () {
 };
 
 Game.prototype._drawBall = function () {
+  for (i=0; i<this.ballsArray.length; i++){
   this.ctx.beginPath();
   this.ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2, true);
   this.ctx.fillStyle = this.ball.shadowColor;
@@ -344,6 +369,7 @@ Game.prototype._drawBall = function () {
   this.ctx.arc(this.ball.x-4, this.ball.y-4, this.ball.radius-7, 0, Math.PI * 2, true);
   this.ctx.fillStyle = this.ball.lightColor;
   this.ctx.fill();
+  }
 };
 
 Game.prototype._drawBar = function () {
@@ -361,7 +387,6 @@ Game.prototype._drawBar = function () {
 Game.prototype._drawBricks = function () {
   var effect = 3;
   for (i=0; i<this.bricksArray.length; i++){
-    //console.log(this.bricksArray);
     this.ctx.fillStyle = this.bricksArray[i].color;
     this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width, this.bricksArray[i].height);
     //luz ladrillos

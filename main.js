@@ -20,6 +20,7 @@ $(document).ready(function(){
     level: 1,
     price: new Price(),
     pricesArray : [],
+    ballsArray : [],
   });
   game.start();
 

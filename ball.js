@@ -2,14 +2,14 @@ function Ball (canvasWidth, canvasHeight) {
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
   this.radius = 10;
-  this.x = null;
-  this.y = null;
+  this.x = 10;
+  this.y = 10;
   this.mediumColor1 = '#878787';
   this.mediumColor2 = '#a8a8a8';
   this.lightColor ='#d6d6d6';
   this.shadowColor ='#6d6d6d';
-  this.vx = 1;
-  this.vy = 1;
+  this.vx = 4;
+  this.vy = -6;
   this.status = null;
 }
 

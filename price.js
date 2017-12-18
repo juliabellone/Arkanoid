@@ -30,3 +30,14 @@ function PriceBarShort (brickX, brickY) {
   this.text = 'BAR -';
   this.type = 'barshort';
 }
+
+function PriceNewBall (brickX, brickY) {
+  this.x = brickX;
+  this.y = brickY;
+  this.vy = 4;
+  this.width = 45;
+  this.height = 20;
+  this.color = 'blue' ;
+  this.text = 'BALL';
+  this.type = 'newball';
+}
