@@ -24,18 +24,18 @@ function Game(options) {
 Game.prototype.start = function () {
   this._assignLevel();
   this._assignControlKeys();
+  
   this._drawBoard();
   this._drawBall();
   this._drawBar();
   this._drawBricks();
-  this._launchStatus();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
   this.ballsArray.push(this.ball);
 
 };
 
 Game.prototype._update = function () {
-  //console.log(this.pricesArray);
+  console.log(this.status+' level: '+this.level);
   //console.log(this.ballsArray);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
@@ -47,49 +47,18 @@ Game.prototype._update = function () {
   this._drawBricks();
   this._drawPrices();
   this._bounce();
-  if(this._hitBottom()) {
-    this.status = 'gameOver';
+  this._hitBottom();
+
+  if(this.status == 'gameOver') {
+     //para la pelota cuando pierdes
+     this.ballsArray[0].vx = 0;
+     this.ballsArray[0].vy = 0; 
+     //alerta de que has perdido 
+     this._drawGameOver();
   }
 
   //bounce with Bar
   this._barBounce();
-
-  // if(this._barBounce(this.bar).value){
-  //   this.ballsArray.forEach(function (ball) {
-  //     var ballX = ball.x;
-  //     var barX = this.bar.x;
-  //     var barX1 = this.bar.x + (this.bar.width/5);
-  //     var barX2 = this.bar.x + (this.bar.width/5)*2;
-  //     var barX3 = this.bar.x + (this.bar.width/5)*3;
-  //     var barX4 = this.bar.x + (this.bar.width/5)*4;
-  //
-  //     if (ballX > barX && ballX < barX1) {
-  //       if (ball.vx > 0) {
-  //         ball.vx = -ball.vx;
-  //       } else {
-  //         ball.vx = ball.vx*1.6;
-  //       }
-  //     }
-  //     if (ballX > barX1 && ballX < barX2) {
-  //       ball.vx = ball.vx*0.7;
-  //     }
-  //     if (ballX > barX2 && ballX < barX3) {
-  //       ball.vx = ball.vx*0.3;
-  //     }
-  //     if (ballX > barX3 && ballX < barX4) {
-  //       ball.vx = ball.vx*0.7;
-  //     }
-  //     if (ballX > barX4) {
-  //       if (ball.vx < 0) {
-  //         ball.vx = -ball.vx;
-  //       } else {
-  //         ball.vx = ball.vx*1.6;
-  //       }
-  //     }
-  //     ball.vy = - ball.vy;
-  //   }.bind(this));
-  // }
-
   this._maxMinSpeed();
   this._bricksCollision();
 
@@ -109,9 +78,6 @@ Game.prototype._update = function () {
 
 
 Game.prototype._launchStatus = function () {
-  //establece la barra en el centro
-  this.x = this.canvasWidth/2 - this.width/2;
-  this.y = this.canvasHeight - this.height;
   //establece la pelota encima de la barra y hace que la siga;
   this.ball.x = this.canvasWidth/2;
   this.ball.y = this.canvasHeight - this.ball.radius - this.bar.height;
@@ -140,12 +106,20 @@ Game.prototype._pause = function () {
 
 Game.prototype._win = function () {
  if (this.level < 4){
+  //sube el nivel y dibuja todo de nuevo
   this.level++;
   this._assignLevel();
   this._drawBall();
   this._drawBar();
   this._drawBricks();
+  //hace reset del array de pelotas
+  this.ballsArray = [];
+  this.ballsArray.push(this.ball);
+  //hace reset del array de premios y deja la barra al tamaño original
+  this.pricesArray = [];
+  this.bar.width = 125;
  }
+ else alert('has ganado el juego!');
 };
 
 Game.prototype._assignLevel = function () {
@@ -195,18 +169,32 @@ Game.prototype._bounce = function () {
 //Deletes a ball from array if it hits bottom. Except if it's the last one.
 Game.prototype._hitBottom = function () {
   this.ballsArray.forEach(function (ball, index, array) {
-    if (ball.y + ball.vy > this.canvasHeight - ball.radius) {
+    if (ball.y + ball.vy == this.canvasHeight - ball.radius) {
       if (array.length == 1) {
-        this.vx = 0;
-        this.vy = 0;
-        return true;
+        this.status = 'gameOver';
       }
       if (array.length > 1) {
         array.splice(index,1);
       }
+
     }
   }.bind(this));
 };
+
+// Game.prototype._hitBottom = function () {
+//   return this.ballsArray.forEach(function (ball, index, array) {
+//     if (ball.y + ball.vy > this.canvasHeight - ball.radius) {
+//       if (array.length == 1) {
+//          this.ballsArray[0].vx = 0;
+//         this.ballsArray[0].vy = 0;
+//         return true;
+//       }
+//       if (array.length > 1) {
+//         array.splice(index,1);
+//       }
+//     }
+//   }.bind(this));
+// };
 
 //Defines balls max and min speeds
 Game.prototype._maxMinSpeed = function () {
@@ -348,7 +336,8 @@ Game.prototype._bricksCollision = function () {
   Game.prototype._newPrice = function (brickX, brickY) {
     var random = Math.floor(Math.random() * 3); //0, 1 o 2
       if (random == 1) {
-        var random2 = Math.floor(Math.random() * 3);
+        //var random2 = Math.floor(Math.random() * 3);
+        var random2 = 2;
         //Math.floor(Math.random() * 3);
         switch (random2) {
           case 0: var price = new PriceBarLong(brickX, brickY);
@@ -371,15 +360,6 @@ Game.prototype._bricksCollision = function () {
     }
   };
 
-  // Game.prototype._deletePrice = function() {
-  //   if (this.pricesArray.length> 0 ) {
-  //     for (i = 0; i < this.pricesArray.length; i++) {
-  //         if(this.pricesArray[i].y > this.canvasHeight) {
-  //           this.pricesArray.splice(i);
-  //         }
-  //     }
-  //   }
-  // };
 
   Game.prototype._deletePrice = function() {
     this.pricesArray.forEach(function (price, index, array) {
@@ -415,40 +395,22 @@ Game.prototype._bricksCollision = function () {
     }.bind(this));
   };
 
-  // Game.prototype._priceTouchBar = function () {
-  //   if (this.pricesArray.length> 0 ) {
-  //     for (i = 0; i < this.pricesArray.length; i++) {
-  //       var priceX = this.pricesArray[i].x;
-  //       var priceBottom = this.pricesArray[i].y + this.pricesArray[i].height;
-  //       if(priceX > this.bar.x && priceX < this.bar.x+this.bar.width && priceBottom >= this.bar.y) {
-  //           switch (this.pricesArray[i].type) {
-  //             case 'barlong':
-  //             clearTimeout(action);
-  //             this.bar.width = 200;
-  //             var action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
-  //             break;
-  //             case 'barshort':
-  //             clearTimeout(action);
-  //             this.bar.width = 90;
-  //             action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
-  //             break;
-  //             case 'newball':
-  //             var newBall = new Ball(this.canvasWidth, this.canvasHeight);
-  //             this.ballsArray.push(newBall);
-  //             break;
-  //           }
-  //           this.pricesArray[i].width = 0;
-  //       }
-  //     }
-  //   }
-  // };
-
 //---------------DRAWING FUNCTIONS---------------//
 
 Game.prototype._drawBoard = function () {
   this.ctx.fillStyle = this.color;
   this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 };
+
+Game.prototype._drawGameOver = function () {
+  this.ctx.fillStyle = 'rgba(255, 0, 0, 0.6)';
+  this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+  this.ctx.fillStyle = '#fff';
+  this.ctx.font = "bold 50px Arial";
+  this.ctx.fillText('Game Over', 260, 200);
+  this.ctx.font = "bold 30px Arial";
+  this.ctx.fillText('Press enter to try again', 230, 240);
+} 
 
 Game.prototype._drawBall = function () {
   this.ballsArray.forEach(function (ball) {
@@ -515,6 +477,7 @@ Game.prototype._drawPrices = function () {
 var keys = [];
 Game.prototype._assignControlKeys = function () {
 
+  //Pausa y despausa el juego con la barra espaciadora
   document.onkeydown = function (e) {
     if (e.keyCode == 32) {
       if (this.status == null || this.status == 'win') {
@@ -523,19 +486,33 @@ Game.prototype._assignControlKeys = function () {
       this._pause();
       }
     }
-  }.bind(this);
-
-  document.onkeyup = function (e) {
-    if(e.keyCode == 37 || e.keyCode == 39) {
-      this.bar.vx = 0;
-    }
     //Tecla trampa para pasar de nivel con L
     if (e.keyCode == 76) {
       this.status = 'win';
       this._win();
     }
+    //Reinicia el juego desde el nivel uno cuando se pierde con tecla enter
+    if (e.keyCode == 13) {
+      if (this.status == 'gameOver'){
+        console.log('hola');
+        this.status = 'win'; // esto aun no funciona 
+        this._win();
+        this.level = ; 
+    }
+  
+}
   }.bind(this);
 
+  //Reinicia la velocidad de la barra para evitar problemas al cambiar de dirección
+  document.onkeyup = function (e) {
+    if(e.keyCode == 37 || e.keyCode == 39) {
+      this.bar.vx = 0;
+    }
+    
+    
+  }.bind(this);
+
+  //"escucha" las teclas todo el rato paramover la barra de forma fluida
   window.addEventListener("keydown", function (e) {
     keys[e.keyCode] = true;
   });
@@ -551,3 +528,5 @@ Game.prototype._assignControlKeys = function () {
     this.bar.goRight();
   }
 };
+
+

@@ -13,9 +13,9 @@ function Levels (canvasWidth, canvasHeight) {
   // this.shadows = ['#BB2000', '#BBA200',  '#993c94', '#008833'];  
 
   
-  this.colors = ['#930945','#ea6913','#00e5ee','#004522','#fdac21'];
-  this.lights = ['#930945','#ea6913','#00e5ee','#004522','#fdac21'];
-  this.shadows= ['#930945','#ea6913','#00e5ee','#004522','#fdac21'];
+  this.colors = ['#fffa00','#6aff00','#00fff2','#ff3877','#ff7728'];
+  this.lights = ['#fffc72','#9eff59', '#72fff7', '#ff7fa7', '#ff9e66'];
+  this.shadows= ['#7f7d00', '#357f00', '#007f79', '#7f1c3b', '#7f3b14'];
 
   this.level1 = [];
   this.level2 = [];
@@ -39,7 +39,7 @@ Levels.prototype.generateLevel1 = function () {
   valueX = 80;
   valueY = 40;
   var newColor = 0;
-  for(var i = 0; i < 7; i++) {
+  for(var i = 0; i < 1; i++) {
       for(var j = 0; j < 12; j++){
         var newBrick = new Brick({
           color: this.colors[newColor],
@@ -70,7 +70,7 @@ Levels.prototype.generateLevel2 = function () {
   for(var i = 0; i < 12; i++) { //filas
       var rowLenght = 12;
       for(var j = 0; j < rowLenght-i; j++){ //columnas
-        var r = Math.floor(Math.random()*4);
+        var r = Math.floor(Math.random()*5);
         var newBrick = new Brick({
           color: this.colors[r],
           colorShadow: this.shadows[r],
@@ -138,7 +138,7 @@ Levels.prototype.generateLevel3 = function () {
 Levels.prototype.generateLevel4 = function () {
   this.level4 = [];
   valueX = 197;
-  valueY = 120;
+  valueY = 112;
   var newColor = 0;
   for(var i = 0; i < 7; i++) {                          //rows
       for(var j = 0; j < 8; j++){                    //columns
@@ -188,7 +188,7 @@ Levels.prototype.generateLevel4 = function () {
             width:50,
             height:20,
             x:unbvalueX,
-            y:61,
+            y:59,
             type:'unb',
           });
            this.level4.push(unbnewBrick);
