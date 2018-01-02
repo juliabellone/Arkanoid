@@ -1,10 +1,22 @@
+  // //green, cyan, yellow, pink, paleta que paree de bebe
+    // this.colors = ['#b0ff00','#00ffd2', '#fdff00', '#ff99fa'];
+  // this.lights = ['#d7ff7f', '#99ffed', '#feff99', '#ff00f4'];
+  // this.shadows = ['#587f00', '#007f69',  '#7e7f00', '#7f007a'];
+
+
 function Levels (canvasWidth, canvasHeight) {
   this.canvasWidth = canvasWidth;
   this.canvasHeight = canvasHeight;
-  //red, yellow, violet, turquoise
-  this.colors = ['#FF451E', '#FFE11E', '#5927BF', '#17C759'];
-  this.lights = ['#FF8C74', '#FFEC74', '#906DD7', '#64DD91'];
-  this.shadows = ['#BB2000', '#BBA200',  '#310B80', '#008833'];
+  // //red, yellow, violet, turquoise
+  // this.colors = ['#FF451E', '#FFE11E', '#ff65f8', '#17C759'];
+  // this.lights = ['#FF8C74', '#FFEC74', '#ffc1fc', '#64DD91'];
+  // this.shadows = ['#BB2000', '#BBA200',  '#993c94', '#008833'];  
+
+  
+  this.colors = ['#930945','#ea6913','#00e5ee','#004522','#fdac21'];
+  this.lights = ['#930945','#ea6913','#00e5ee','#004522','#fdac21'];
+  this.shadows= ['#930945','#ea6913','#00e5ee','#004522','#fdac21'];
+
   this.level1 = [];
   this.level2 = [];
   this.level3 = [];

@@ -36,7 +36,7 @@ Game.prototype.start = function () {
 
 Game.prototype._update = function () {
   //console.log(this.pricesArray);
-  console.log(this.ballsArray);
+  //console.log(this.ballsArray);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
