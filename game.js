@@ -35,8 +35,10 @@ Game.prototype.start = function () {
 };
 
 Game.prototype._update = function () {
-  console.log(this.status+' level: '+this.level);
+  //console.log(this.status+' level: '+this.level);
   //console.log(this.ballsArray);
+  console.log(this.status);
+  console.log(this.intervalGame);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
@@ -50,11 +52,7 @@ Game.prototype._update = function () {
   this._hitBottom();
 
   if(this.status == 'gameOver') {
-     //para la pelota cuando pierdes
-     this.ballsArray[0].vx = 0;
-     this.ballsArray[0].vy = 0; 
-     //alerta de que has perdido 
-     this._drawGameOver();
+    this._gameOver();
   }
 
   //bounce with Bar
@@ -71,6 +69,7 @@ Game.prototype._update = function () {
   this._deletePrice();
   this._priceTouchBar();
   this._assignControlKeys();
+  //animation frame
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
 };
 
@@ -121,6 +120,14 @@ Game.prototype._win = function () {
  }
  else alert('has ganado el juego!');
 };
+
+Game.prototype._gameOver = function () {
+  //para la pelota cuando pierdes
+  this.ballsArray[0].vx = 0;
+  this.ballsArray[0].vy = 0; 
+  //alerta de que has perdido 
+  this._drawGameOver();
+}
 
 Game.prototype._assignLevel = function () {
   switch (this.level) {
@@ -180,21 +187,6 @@ Game.prototype._hitBottom = function () {
     }
   }.bind(this));
 };
-
-// Game.prototype._hitBottom = function () {
-//   return this.ballsArray.forEach(function (ball, index, array) {
-//     if (ball.y + ball.vy > this.canvasHeight - ball.radius) {
-//       if (array.length == 1) {
-//          this.ballsArray[0].vx = 0;
-//         this.ballsArray[0].vy = 0;
-//         return true;
-//       }
-//       if (array.length > 1) {
-//         array.splice(index,1);
-//       }
-//     }
-//   }.bind(this));
-// };
 
 //Defines balls max and min speeds
 Game.prototype._maxMinSpeed = function () {
@@ -317,29 +309,15 @@ Game.prototype._bricksCollision = function () {
               }
               return true;
           }
-          // var dx = distX - brickWidth / 2;
-          // var dy = distY -brickHeight / 2;
-          // if(dx * dx + dy * dy <= (ballRadius*ballRadius)){
-          //   console.log('diagonal');
-          //   // this.ball.vy = - this.ball.vy;
-          //   this.ball.vx = - this.ball.vx;
-          //   if(brick.type != 'unb'){
-          //     array.splice(index, 1);
-          //   }
-          // }
-          // return (dx * dx + dy * dy <= (ballRadius*ballRadius));
-
     }.bind(this));
   }.bind(this));
   };
 
   Game.prototype._newPrice = function (brickX, brickY) {
-    var random = Math.floor(Math.random() * 3); //0, 1 o 2
+    var random = Math.floor(Math.random() * 3);
       if (random == 1) {
-        //var random2 = Math.floor(Math.random() * 3);
-        var random2 = 2;
-        //Math.floor(Math.random() * 3);
-        switch (random2) {
+        var random2 = Math.floor(Math.random() * 3);
+         switch (random2) {
           case 0: var price = new PriceBarLong(brickX, brickY);
           break;
           case 1: price = new PriceBarShort(brickX, brickY);
@@ -378,12 +356,12 @@ Game.prototype._bricksCollision = function () {
           case 'barlong':
           clearTimeout(action);
           this.bar.width = 200;
-          var action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+          var action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 10000);
           break;
           case 'barshort':
           clearTimeout(action);
           this.bar.width = 90;
-          action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 15000);
+          action = setTimeout(function(){ this.bar.width = 125; }.bind(this), 10000);
           break;
           case 'newball':
           var newBall = new Ball(this.canvasWidth, this.canvasHeight);
@@ -407,9 +385,9 @@ Game.prototype._drawGameOver = function () {
   this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
   this.ctx.fillStyle = '#fff';
   this.ctx.font = "bold 50px Arial";
-  this.ctx.fillText('Game Over', 260, 200);
+  this.ctx.fillText('Game Over', 260, 220);
   this.ctx.font = "bold 30px Arial";
-  this.ctx.fillText('Press enter to try again', 230, 240);
+  this.ctx.fillText('Press enter to try again', 230, 260);
 } 
 
 Game.prototype._drawBall = function () {
@@ -491,16 +469,25 @@ Game.prototype._assignControlKeys = function () {
       this.status = 'win';
       this._win();
     }
-    //Reinicia el juego desde el nivel uno cuando se pierde con tecla enter
+    // //Reinicia el juego desde el nivel uno cuando se pierde con tecla enter
     if (e.keyCode == 13) {
       if (this.status == 'gameOver'){
         console.log('hola');
-        this.status = 'win'; // esto aun no funciona 
-        this._win();
-        this.level = ; 
+        this.status = null;
+        //Deja el primer nivel y dibuja todo de nuevo
+        this.level = 1;
+        this._assignLevel();
+        this._drawBall();
+        this._drawBar();
+        this._drawBricks();
+        //hace reset del array de pelotas
+        this.ballsArray = [];
+        this.ballsArray.push(this.ball);
+        //hace reset del array de premios y deja la barra al tamaño original
+        this.pricesArray = [];
+        this.bar.width = 125;
+      }
     }
-  
-}
   }.bind(this);
 
   //Reinicia la velocidad de la barra para evitar problemas al cambiar de dirección

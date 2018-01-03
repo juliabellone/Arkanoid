@@ -39,7 +39,7 @@ Levels.prototype.generateLevel1 = function () {
   valueX = 80;
   valueY = 40;
   var newColor = 0;
-  for(var i = 0; i < 1; i++) {
+  for(var i = 0; i < 7; i++) {
       for(var j = 0; j < 12; j++){
         var newBrick = new Brick({
           color: this.colors[newColor],
