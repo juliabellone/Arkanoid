@@ -28,6 +28,7 @@ Game.prototype.start = function () {
   this._drawBall();
   this._drawBar();
   this._drawBricks();
+  this._playMusic();
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
   this.ballsArray.push(this.ball);
 
@@ -74,6 +75,16 @@ Game.prototype._update = function () {
 
 //---------------MAIN GAME FUNCTIONS---------------//
 
+Game.prototype._playMusic = function () {
+  myAudio = new Audio('sound/arcade-music-loop.wav');
+  myAudio.loop = true;
+  myAudio.play();
+};
+
+Game.prototype._playBrickSound = function () {
+  myAudio2 = new Audio('sound/hit1.wav');
+  myAudio2.play();
+};
 
 Game.prototype._launchStatus = function () {
   //establece la pelota encima de la barra y hace que la siga;
@@ -96,9 +107,11 @@ Game.prototype._pause = function () {
   if (this.status == 'playing'){
       window.cancelAnimationFrame(this.intervalGame);
       this.status = 'pause';
+      myAudio.pause();
   } else if (this.status == 'pause') {
   this.intervalGame = window.requestAnimationFrame(this._update.bind(this));
   this.status = 'playing';
+  myAudio.play();
   }
 };
 
@@ -300,6 +313,7 @@ Game.prototype._bricksCollision = function () {
               ball.vy = - ball.vy;
               if(brick.type != 'unb'){
                 array.splice(index, 1);
+                this._playBrickSound();
                 this._newPrice(brick.x, brick.y);
               }
               return true;
@@ -309,6 +323,7 @@ Game.prototype._bricksCollision = function () {
               ball.vx =- ball.vx;
               if(brick.type != 'unb'){
                 array.splice(index, 1);
+                this._playBrickSound(); 
                 this._newPrice(brick.x, brick.y);
               }
               return true;
