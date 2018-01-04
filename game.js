@@ -24,7 +24,6 @@ function Game(options) {
 Game.prototype.start = function () {
   this._assignLevel();
   this._assignControlKeys();
-  
   this._drawBoard();
   this._drawBall();
   this._drawBar();
@@ -55,7 +54,7 @@ Game.prototype._update = function () {
     this._gameOver();
   }
 
-  //bounce with Bar
+  //rebote con la barra
   this._barBounce();
   this._maxMinSpeed();
   this._bricksCollision();
@@ -64,7 +63,7 @@ Game.prototype._update = function () {
     this.status = 'win';
     this._win();
   }
-  //functions of the prices
+  //funciones de los premios
   this.pricesDownMotion();
   this._deletePrice();
   this._priceTouchBar();
@@ -114,8 +113,9 @@ Game.prototype._win = function () {
   //hace reset del array de pelotas
   this.ballsArray = [];
   this.ballsArray.push(this.ball);
-  //hace reset del array de premios y deja la barra al tamaño original
+  //hace reset del array de premios
   this.pricesArray = [];
+  // deja la barra al tamaño original
   this.bar.width = 125;
  }
  else alert('has ganado el juego!');
@@ -125,7 +125,7 @@ Game.prototype._gameOver = function () {
   //para la pelota cuando pierdes
   this.ballsArray[0].vx = 0;
   this.ballsArray[0].vy = 0; 
-  //alerta de que has perdido 
+  //alerta de que has perdido y pinta la pantalla de rojo
   this._drawGameOver();
 }
 
@@ -149,6 +149,8 @@ Game.prototype._assignLevel = function () {
     break;
    }
 };
+
+//Devuelve verdadero si hay algun ladrillo de tipo normal aun en pantalla
 Game.prototype._checkIfWin = function () {
   return this.bricksArray.some(function (brick) {
   return brick.type == 'normal';
@@ -157,13 +159,13 @@ Game.prototype._checkIfWin = function () {
 
 //---------------BALL FUNCTIONS---------------//
 
-//Defines balls speed and bounce against walls
+//Define la velocidad de la peloa y el rebote contra las paredes
 Game.prototype._bounce = function () {
   this.ballsArray.forEach(function (ball) {
-    //acceleration of the ball
+    //aceleración de la pelota
     ball.x += ball.vx;
     ball.y += ball.vy;
-    //bounce of the ball
+    //rebote de la pelota
     if (ball.y + ball.vy < ball.radius) {
       ball.vy = -ball.vy;
     }
@@ -173,7 +175,7 @@ Game.prototype._bounce = function () {
   }.bind(this));
 };
 
-//Deletes a ball from array if it hits bottom. Except if it's the last one.
+//Borra una pelota del array cuando toca el suelo. Excepto si se trata de la última
 Game.prototype._hitBottom = function () {
   this.ballsArray.forEach(function (ball, index, array) {
     if (ball.y + ball.vy == this.canvasHeight - ball.radius) {
@@ -188,7 +190,7 @@ Game.prototype._hitBottom = function () {
   }.bind(this));
 };
 
-//Defines balls max and min speeds
+//Define las velocidades máximas y mínimas de las pelotas
 Game.prototype._maxMinSpeed = function () {
   this.ballsArray.forEach(function (ball, index, array) {
     if (ball.vx > 0 && ball.vx > 8) {
@@ -206,7 +208,7 @@ Game.prototype._maxMinSpeed = function () {
   }.bind(this));
 };
 
-//Defines bouncing of Bar and Balls
+//Define el rebote en la barra y las paredes de las pelotas
 Game.prototype._barBounce = function () {
   this.ballsArray.forEach(function (ball) {
     var ballX = ball.x;
@@ -239,6 +241,7 @@ Game.prototype._barBounce = function () {
   }.bind(this));
 };
 
+//Crea el efecto de cambio de velocidad cuando la pelota toca cada parte de la barra (cinco partes diferenciadas)
 Game.prototype._barBounceEffect = function (ball) {
     var ballX = ball.x;
     var barX = this.bar.x;
@@ -273,6 +276,7 @@ Game.prototype._barBounceEffect = function (ball) {
     ball.vy = - ball.vy;
 };
 
+//Define que los ladrillos se rompan al tocarlos una pelota y que sea llamada la funcion de los premios
 Game.prototype._bricksCollision = function () {
   this.ballsArray.forEach(function (ball) {
     var ballX = ball.x;
@@ -313,8 +317,9 @@ Game.prototype._bricksCollision = function () {
   }.bind(this));
   };
 
+  //Crea un premio una de cada 4 veces que es llamada
   Game.prototype._newPrice = function (brickX, brickY) {
-    var random = Math.floor(Math.random() * 3);
+    var random = Math.floor(Math.random() * 4);
       if (random == 1) {
         var random2 = Math.floor(Math.random() * 3);
          switch (random2) {
@@ -330,6 +335,7 @@ Game.prototype._bricksCollision = function () {
       }
   };
 
+  //mueve los premios hacia abajo
   Game.prototype.pricesDownMotion = function () {
     if (this.pricesArray.length> 0 ) {
       for (i = 0; i < this.pricesArray.length; i++) {
@@ -338,7 +344,7 @@ Game.prototype._bricksCollision = function () {
     }
   };
 
-
+  //Borra los premios del array cuando estan fuera de la vista
   Game.prototype._deletePrice = function() {
     this.pricesArray.forEach(function (price, index, array) {
       if(price.y > this.canvasHeight) {
@@ -347,6 +353,7 @@ Game.prototype._bricksCollision = function () {
     }.bind(this));
   };
 
+  //Define que pasa cuando un premio toca la barra y que hace cada premio
   Game.prototype._priceTouchBar = function () {
     this.pricesArray.forEach(function (price, index, array) {
       var priceX = price.x;
@@ -390,6 +397,59 @@ Game.prototype._drawGameOver = function () {
   this.ctx.fillText('Press enter to try again', 230, 260);
 } 
 
+Game.prototype._drawBar = function () {
+  this.ctx.fillStyle = this.bar.shadowColor;
+  this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
+  this.ctx.fillStyle = this.bar.mediumColor1;
+  this.ctx.fillRect(this.bar.x, this.bar.y+2.4, this.bar.width, this.bar.height/1.5);
+  this.ctx.fillStyle = this.bar.mediumColor2;
+  this.ctx.fillRect(this.bar.x, this.bar.y+4, this.bar.width, this.bar.height/2.2);
+  this.ctx.fillStyle = this.bar.lightColor;
+  this.ctx.fillRect(this.bar.x, this.bar.y+5.4, this.bar.width, this.bar.height/4);
+
+};
+
+Game.prototype._drawBricks = function () {
+  var effect = 3;
+  this.bricksArray.forEach(function(brick){
+    this.ctx.fillStyle = brick.color;
+    this.ctx.fillRect(brick.x, brick.y, brick.width, brick.height);
+    //luz ladrillos
+    this.ctx.fillStyle = brick.colorLight;
+    this.ctx.fillRect(brick.x, brick.y,brick.width,effect);
+    this.ctx.fillRect(brick.x, brick.y,effect,brick.height);
+    //sombra ladrillos
+    this.ctx.fillStyle = brick.colorShadow;
+    this.ctx.fillRect(brick.x,
+    (brick.y + brick.height)-effect,
+    brick.width,
+    effect);
+    this.ctx.fillRect((brick.x+brick.width), brick.y,effect,brick.height);
+  }.bind(this));
+};
+
+
+Game.prototype._drawPrices = function () {
+  this.pricesArray.forEach(function (price){
+    this.ctx.moveTo(price.x,price.y+price.radius);
+    this.ctx.lineTo(price.x,price.y+price.height-price.radius);
+    this.ctx.quadraticCurveTo(price.x,price.y+price.height,price.x+price.radius,+price.y+price.height);
+    this.ctx.lineTo(price.x+price.width-price.radius,price.y+price.height);
+    this.ctx.quadraticCurveTo(price.x+price.width,price.y+price.height,price.x+price.width,price.y+price.height-price.radius);
+    this.ctx.lineTo(price.x+price.width,price.y+price.radius);
+    this.ctx.quadraticCurveTo(price.x+price.width,price.y,price.x+price.width-price.radius,price.y);
+    this.ctx.lineTo(price.x+price.radius,price.y);
+    this.ctx.quadraticCurveTo(price.x,price.y,price.x,price.y+price.radius);
+    this.ctx.strokeStyle = 'white';
+    this.ctx.stroke();
+    this.ctx.fillStyle = price.color;
+    this.ctx.fill();
+    this.ctx.fillStyle = 'white';
+    this.ctx.font = "bold 13px Arial";
+    this.ctx.fillText(price.text, price.x + 5, price.y + price.height - 5 );
+  }.bind(this));
+};
+
 Game.prototype._drawBall = function () {
   this.ballsArray.forEach(function (ball) {
     this.ctx.beginPath();
@@ -408,47 +468,8 @@ Game.prototype._drawBall = function () {
     this.ctx.arc(ball.x-4, ball.y-4, ball.radius-7, 0, Math.PI * 2, true);
     this.ctx.fillStyle = ball.lightColor;
     this.ctx.fill();
+    this.ctx.closePath();
   }.bind(this));
-};
-
-Game.prototype._drawBar = function () {
-  this.ctx.fillStyle = this.bar.shadowColor;
-  this.ctx.fillRect(this.bar.x, this.bar.y, this.bar.width, this.bar.height);
-  this.ctx.fillStyle = this.bar.mediumColor1;
-  this.ctx.fillRect(this.bar.x, this.bar.y+2.4, this.bar.width, this.bar.height/1.5);
-  this.ctx.fillStyle = this.bar.mediumColor2;
-  this.ctx.fillRect(this.bar.x, this.bar.y+4, this.bar.width, this.bar.height/2.2);
-  this.ctx.fillStyle = this.bar.lightColor;
-  this.ctx.fillRect(this.bar.x, this.bar.y+5.4, this.bar.width, this.bar.height/4);
-
-};
-
-Game.prototype._drawBricks = function () {
-  var effect = 3;
-  for (i=0; i<this.bricksArray.length; i++){
-    this.ctx.fillStyle = this.bricksArray[i].color;
-    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y, this.bricksArray[i].width, this.bricksArray[i].height);
-    //luz ladrillos
-    this.ctx.fillStyle = this.bricksArray[i].colorLight;
-    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,this.bricksArray[i].width,effect);
-    this.ctx.fillRect(this.bricksArray[i].x, this.bricksArray[i].y,effect,this.bricksArray[i].height);
-    //sombra ladrillos
-    this.ctx.fillStyle = this.bricksArray[i].colorShadow;
-    this.ctx.fillRect(this.bricksArray[i].x,
-    (this.bricksArray[i].y + this.bricksArray[i].height)-effect,
-    this.bricksArray[i].width,
-    effect);
-    this.ctx.fillRect((this.bricksArray[i].x+this.bricksArray[i].width), this.bricksArray[i].y,effect,this.bricksArray[i].height);
-  }
-};
-Game.prototype._drawPrices = function () {
-  for (i=0; i<this.pricesArray.length; i++){
-    this.ctx.fillStyle = this.pricesArray[i].color;
-    this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
-    this.ctx.fillStyle = 'white';
-    this.ctx.font = "bold 12px Arial";
-    this.ctx.fillText(this.pricesArray[i].text, this.pricesArray[i].x + 5, this.pricesArray[i].y + this.pricesArray[i].height - 5 );
-  }
 };
 
 //---------------ASSIGNING CONTROL KEYS---------------//
