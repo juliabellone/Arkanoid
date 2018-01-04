@@ -15,7 +15,7 @@ function PriceBarLong (brickX, brickY) {
   this.vy = 4;
   this.width = 45;
   this.height = 20;
-  this.color = 'green' ;
+  this.color = '#006600' ;
   this.text = 'BAR +';
   this.type = 'barlong';
   this.radius = 10;
@@ -27,7 +27,7 @@ function PriceBarShort (brickX, brickY) {
   this.vy = 4;
   this.width = 45;
   this.height = 20;
-  this.color = 'red' ;
+  this.color = '#cc0000' ;
   this.text = 'BAR -';
   this.type = 'barshort';
   this.radius = 10;
@@ -39,7 +39,7 @@ function PriceNewBall (brickX, brickY) {
   this.vy = 4;
   this.width = 45;
   this.height = 20;
-  this.color = 'blue' ;
+  this.color = '#000080' ;
   this.text = 'BALL';
   this.type = 'newball';
   this.radius = 10;

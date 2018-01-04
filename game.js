@@ -35,9 +35,9 @@ Game.prototype.start = function () {
 
 Game.prototype._update = function () {
   //console.log(this.status+' level: '+this.level);
-  //console.log(this.ballsArray);
-  console.log(this.status);
-  console.log(this.intervalGame);
+  console.log(this.pricesArray);
+  //console.log(this.status);
+  //console.log(this.intervalGame);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
   if (this.status == 'win' || this.status == null){
       this._launchStatus();
@@ -254,23 +254,23 @@ Game.prototype._barBounceEffect = function (ball) {
       if (ball.vx > 0) {
         ball.vx = -ball.vx;
       } else {
-        ball.vx = ball.vx*1.6;
+        ball.vx = ball.vx*1.8;
       }
     }
     if (ballX > barX1 && ballX < barX2) {
-      ball.vx = ball.vx*0.7;
+      ball.vx = ball.vx*0.6;
     }
     if (ballX > barX2 && ballX < barX3) {
-      ball.vx = ball.vx*0.3;
+      ball.vx = ball.vx*0.2;
     }
     if (ballX > barX3 && ballX < barX4) {
-      ball.vx = ball.vx*0.7;
+      ball.vx = ball.vx*0.6;
     }
     if (ballX > barX4) {
       if (ball.vx < 0) {
         ball.vx = -ball.vx;
       } else {
-        ball.vx = ball.vx*1.6;
+        ball.vx = ball.vx*1.8;
       }
     }
     ball.vy = - ball.vy;
@@ -428,9 +428,29 @@ Game.prototype._drawBricks = function () {
   }.bind(this));
 };
 
+// Game.prototype._drawPrices = function () {
+//   for (i=0; i<this.pricesArray.length; i++){
+//     this.ctx.fillStyle = this.pricesArray[i].color;
+//     this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
+//     this.ctx.fillStyle = 'white';
+//     this.ctx.font = "bold 12px Arial";
+//     this.ctx.fillText(this.pricesArray[i].text, this.pricesArray[i].x + 5, this.pricesArray[i].y + this.pricesArray[i].height - 5 );
+//   }
+// };
+// Game.prototype._drawPrices = function () {
+//   for (i=0; i<this.pricesArray.length; i++){
+//     this.ctx.fillStyle = this.pricesArray[i].color;
+//     this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
+//     this.ctx.fillStyle = 'white';
+//     this.ctx.font = "bold 12px Arial";
+//     this.ctx.fillText(this.pricesArray[i].text, this.pricesArray[i].x + 5, this.pricesArray[i].y + this.pricesArray[i].height - 5 );
+//   }
+// };
 
 Game.prototype._drawPrices = function () {
   this.pricesArray.forEach(function (price){
+    this.ctx.beginPath()
+    this.ctx.fillStyle = price.color;
     this.ctx.moveTo(price.x,price.y+price.radius);
     this.ctx.lineTo(price.x,price.y+price.height-price.radius);
     this.ctx.quadraticCurveTo(price.x,price.y+price.height,price.x+price.radius,+price.y+price.height);
@@ -440,12 +460,10 @@ Game.prototype._drawPrices = function () {
     this.ctx.quadraticCurveTo(price.x+price.width,price.y,price.x+price.width-price.radius,price.y);
     this.ctx.lineTo(price.x+price.radius,price.y);
     this.ctx.quadraticCurveTo(price.x,price.y,price.x,price.y+price.radius);
-    this.ctx.strokeStyle = 'white';
-    this.ctx.stroke();
-    this.ctx.fillStyle = price.color;
+    this.ctx.closePath();
     this.ctx.fill();
     this.ctx.fillStyle = 'white';
-    this.ctx.font = "bold 13px Arial";
+    this.ctx.font = "bold 13px sans-serif";
     this.ctx.fillText(price.text, price.x + 5, price.y + price.height - 5 );
   }.bind(this));
 };
