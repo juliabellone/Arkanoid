@@ -1,13 +1,59 @@
-
-/*Intrustions style*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
 body {
-  font-family: sans-serif;
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/*Instructions style*/
+body {
+  font-family: Helvetica, Arial, sans-serif;
   color: #303030;
+  height: 100vh;
 }
 
 main {
   width: 800px;
-  height: 550px;
+  height: 600px;
   padding: 30px;
   background-color: #F5F5F5;
   border: 3px solid #696969;
@@ -24,6 +70,7 @@ h1 {
 h2 {
   font-size: 16px;
   margin: 20px 0px;
+  font-weight: bold;
 }
 
 #spacebar {
@@ -43,7 +90,39 @@ h2 {
   text-align: center;
   margin: 15px 0px;
 }
+img {
+  margin: 5px 0px;
+}
 
+.bonus {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center; 
+}
+
+.bonus-img {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100px;
+  margin-right: 30px;
+}
+
+.bonus-img img {
+  width: 45px;
+}
+
+.bonus-text {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.bonus-text span {
+  font-weight: bold; 
+  color: red;
+}
 /*Game Styles*/
 game {
   display: flex;
@@ -54,7 +133,27 @@ game {
 
 footer {
   width: 100%;
+  height: 70px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  /* background-color:rgb(37, 37, 37); */
+  color: whitesmoke;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.game-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-image: url("../img/dark-triangles.png");
+  background-repeat: repeat;
+}
+
+.titulo-juego {
+  margin-top: 65px;
+  color: white;
+  font-size: 40px;
 }

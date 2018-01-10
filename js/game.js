@@ -76,13 +76,13 @@ Game.prototype._update = function () {
 //---------------MAIN GAME FUNCTIONS---------------//
 
 Game.prototype._playMusic = function () {
-  myAudio = new Audio('sound/arcade-music-loop.wav');
+  myAudio = new Audio('../sound/arcade-music-loop.wav');
   myAudio.loop = true;
   myAudio.play();
 };
 
 Game.prototype._playBrickSound = function () {
-  myAudio2 = new Audio('sound/hit1.wav');
+  myAudio2 = new Audio('../sound/hit1.wav');
   myAudio2.play();
 };
 
