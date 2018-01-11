@@ -3,15 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>BrickBreaker Game</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style-game.css">
   </head>
-  <body class="game-body">
+  <body> 
+  <div class="game-body">
     <h1 class="titulo-juego">ARKANOID</h1>
-    <game>
       <canvas id="arkanoid" width="800" height="500"></canvas>
-    </game>
       <footer><span>JULIA BELLONE - IRONHACK BCN 2017</span></footer>
-      <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+  </div>
+  <div class="sound">
+      <h2>Music</h2>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>   
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
       <script src="js/game.js"></script>
@@ -21,6 +28,6 @@
       <script src="js/bricks.js"></script>
       <script src="js/levels.js"></script>
       <script src="js/price.js"></script>
-
   </body>
 </html>
+d

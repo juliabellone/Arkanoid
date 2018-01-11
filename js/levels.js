@@ -119,7 +119,7 @@ Levels.prototype.generateLevel3 = function () {
         valueY += 21;
     }
       unbvalueX = 0;
-      for(var unbj = 0; unbj < 13; unbj++){
+      for(var unbj = 0; unbj < 10; unbj++){
           var unbnewBrick = new Brick({
             color: '#878787',
             colorShadow: '#6d6d6d',
@@ -131,8 +131,8 @@ Levels.prototype.generateLevel3 = function () {
             type:'unb',
           });
            this.level3.push(unbnewBrick);
-           unbvalueX += 54;
-           if (unbvalueX == 270) {unbvalueX = 530;}
+           unbvalueX += 53;
+           if (unbvalueX == 265) {unbvalueX = 535;}
           }
 };
 Levels.prototype.generateLevel4 = function () {
@@ -176,7 +176,7 @@ Levels.prototype.generateLevel4 = function () {
             type:'unb',
           });
            this.level4.push(unbnewBrick);
-           unbvalueX += 54;
+           unbvalueX += 53;
       }
       //fila de arriba del unb
       unbvalueX = 116;
@@ -188,16 +188,16 @@ Levels.prototype.generateLevel4 = function () {
             width:50,
             height:20,
             x:unbvalueX,
-            y:59,
+            y:70,
             type:'unb',
           });
            this.level4.push(unbnewBrick);
-           unbvalueX += 54;
-           if (unbvalueX == 332) {unbvalueX = 494;}
+           unbvalueX += 53;
+           if (unbvalueX == 328) {unbvalueX = 487;}
       }
       //fila laterla izq del unb
       unbvalueX = 116;
-      unbvalueY = 269;
+      unbvalueY = 270;
       for(var unbj = 0; unbj < 10; unbj++){
           var unbnewBrick = new Brick({
             color: '#878787',
@@ -210,11 +210,11 @@ Levels.prototype.generateLevel4 = function () {
             type:'unb',
           });
            this.level4.push(unbnewBrick);
-           unbvalueY -= 21;
+           unbvalueY -= 20;
       }
       //fila laterla der del unb
-      unbvalueX = 656;
-      unbvalueY = 269;
+      unbvalueX = 646;
+      unbvalueY = 270;
       for(var unbj = 0; unbj < 10; unbj++){
           var unbnewBrick = new Brick({
             color: '#878787',
@@ -227,6 +227,6 @@ Levels.prototype.generateLevel4 = function () {
             type:'unb',
           });
            this.level4.push(unbnewBrick);
-           unbvalueY -= 21;
+           unbvalueY -= 20;
       }
 };

@@ -36,7 +36,7 @@ Game.prototype.start = function () {
 
 Game.prototype._update = function () {
   //console.log(this.status+' level: '+this.level);
-  console.log(this.pricesArray);
+  //console.log(this.pricesArray);
   //console.log(this.status);
   //console.log(this.intervalGame);
   this.ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight);
@@ -76,13 +76,13 @@ Game.prototype._update = function () {
 //---------------MAIN GAME FUNCTIONS---------------//
 
 Game.prototype._playMusic = function () {
-  myAudio = new Audio('../sound/arcade-music-loop.wav');
+  myAudio = new Audio("sound/arcade-music-loop.wav");
   myAudio.loop = true;
   myAudio.play();
 };
 
 Game.prototype._playBrickSound = function () {
-  myAudio2 = new Audio('../sound/hit1.wav');
+  myAudio2 = new Audio("sound/hit1.wav");
   myAudio2.play();
 };
 
@@ -328,6 +328,20 @@ Game.prototype._bricksCollision = function () {
               }
               return true;
           }
+          //toque en una esquina del ladrillo
+          var dx=distX-brickWidth/2;
+          var dy=distY-brickHeight/2;
+          if (dx*dx+dy*dy<=(ballRadius*ballRadius)){
+          ball.vx =- ball.vx;
+          if(brick.type != 'unb'){
+            array.splice(index, 1);
+            this._playBrickSound(); 
+            this._newPrice(brick.x, brick.y);
+          }
+          console.log('esquina');  
+          return true;
+          };
+          
     }.bind(this));
   }.bind(this));
   };
@@ -443,25 +457,6 @@ Game.prototype._drawBricks = function () {
   }.bind(this));
 };
 
-// Game.prototype._drawPrices = function () {
-//   for (i=0; i<this.pricesArray.length; i++){
-//     this.ctx.fillStyle = this.pricesArray[i].color;
-//     this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
-//     this.ctx.fillStyle = 'white';
-//     this.ctx.font = "bold 12px Arial";
-//     this.ctx.fillText(this.pricesArray[i].text, this.pricesArray[i].x + 5, this.pricesArray[i].y + this.pricesArray[i].height - 5 );
-//   }
-// };
-// Game.prototype._drawPrices = function () {
-//   for (i=0; i<this.pricesArray.length; i++){
-//     this.ctx.fillStyle = this.pricesArray[i].color;
-//     this.ctx.fillRect(this.pricesArray[i].x,this.pricesArray[i].y,this.pricesArray[i].width, this.pricesArray[i].height);
-//     this.ctx.fillStyle = 'white';
-//     this.ctx.font = "bold 12px Arial";
-//     this.ctx.fillText(this.pricesArray[i].text, this.pricesArray[i].x + 5, this.pricesArray[i].y + this.pricesArray[i].height - 5 );
-//   }
-// };
-
 Game.prototype._drawPrices = function () {
   this.pricesArray.forEach(function (price){
     this.ctx.beginPath()
@@ -526,7 +521,6 @@ Game.prototype._assignControlKeys = function () {
     // //Reinicia el juego desde el nivel uno cuando se pierde con tecla enter
     if (e.keyCode == 13) {
       if (this.status == 'gameOver'){
-        console.log('hola');
         this.status = null;
         //Deja el primer nivel y dibuja todo de nuevo
         this.level = 1;
@@ -570,4 +564,23 @@ Game.prototype._assignControlKeys = function () {
   }
 };
 
+//Funcion para el boton de sonido
+
+$(function(){
+  
+  $(".slider").click(function(){
+    $(this).toggleClass("active");
+    if ($(this).hasClass("active")){
+      //apagar sonido
+      myAudio.pause();  
+      myAudio = null;
+    }
+    else {
+      //encender sonido
+      myAudio = new Audio("sound/arcade-music-loop.wav");
+      myAudio.play();  
+    }
+  });
+
+});
 
